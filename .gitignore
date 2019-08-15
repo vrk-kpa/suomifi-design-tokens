@@ -1,0 +1,21 @@
+.DS_STORE
+*.log
+0-stage
+
+# build output
+dist
+build
+tmp
+.cache
+.awcache
+.nyc_output
+coverage
+styleguide
+
+# dependencies
+node_modules
+package-lock.json
+
+# editors
+.idea
+.vscode
