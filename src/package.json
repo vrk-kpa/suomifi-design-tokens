@@ -1,0 +1,12 @@
+{
+  "name": "suomifi-design-tokens",
+  "version": "0.0.1",
+  "description": "Design tokens for Suomifi design system",
+  "main": "index.js",
+  "repository": "https://github.com/vrk-kpa/suomifi-design-tokens",
+  "author": "Joonas Kallunki & Aappo Ålander",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "3.0.0"
+  }
+}

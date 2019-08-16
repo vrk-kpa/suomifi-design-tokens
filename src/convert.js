@@ -3,19 +3,25 @@
 
 const path = require("path");
 const fs = require("fs");
+const program = require("commander");
 
 const tokensData = require("./tokens.json");
-const outDir = __dirname + "/../dist/";
 const outFileName = "tokens";
 
 function main() {
   try {
+    program
+      .option("--outdir <outdir>", "output directory", `${__dirname}/../dist/`)
+      .option("--format <format>", "format to output", ["scss", "js"])
+      .parse(process.argv);
     let tokensByCategory = getTokensByCategory(tokensData);
     let resolvedTokensByCategory = resolveCategoryDataForTokens(
       tokensByCategory,
       tokensData.tokens
     );
-    exportToScss(resolvedTokensByCategory, outDir, outFileName);
+    if (program.format.includes("scss")) {
+      exportToScss(resolvedTokensByCategory, program.outdir, outFileName);
+    }
   } catch (err) {
     console.warn(err);
   }
@@ -79,7 +85,7 @@ function formatColorsToScss(tokens) {
 
 function formatTypographyToScss(tokens) {
   return tokens.map(token => {
-    return `@mixin ${token.prefix}_${convertCamelCaseToKebabCase(token.name)} {
+    return `@mixin ${token.prefix}-${convertCamelCaseToKebabCase(token.name)} {
       font-family: "${token.value.fontFamily.join(", ")}";
       font-size: "${token.value.fontSize.value}${
       token.value.fontSize.unit !== null ? token.value.fontSize.unit : ""
@@ -93,7 +99,7 @@ function formatTypographyToScss(tokens) {
 
 function formatSpacingToScss(tokens) {
   return tokens.map(token => {
-    return `$${token.prefix}_${convertCamelCaseToKebabCase(
+    return `$${token.prefix}-${convertCamelCaseToKebabCase(
       token.name
     )}: "${token.value.value + token.value.unit}";`;
   });
