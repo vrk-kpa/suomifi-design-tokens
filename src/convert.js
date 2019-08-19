@@ -11,8 +11,8 @@ const outFileName = "tokens";
 function main() {
   try {
     program
-      .option("--outdir <outdir>", "output directory", `${__dirname}/../dist/`)
-      .option("--format <format>", "format to output", ["scss", "js"])
+      .option("--outdir <outdir>", "output directory", `${__dirname}/../dist`)
+      .option("--format <format>", "format to output", ["scss", "json"])
       .parse(process.argv);
     let tokensByCategory = getTokensByCategory(tokensData);
     let resolvedTokensByCategory = resolveCategoryDataForTokens(
@@ -21,6 +21,9 @@ function main() {
     );
     if (program.format.includes("scss")) {
       exportToScss(resolvedTokensByCategory, program.outdir, outFileName);
+    }
+    if (program.format.includes("json")) {
+      exportToJS(resolvedTokensByCategory, program.outdir, outFileName);
     }
   } catch (err) {
     console.warn(err);
@@ -107,6 +110,60 @@ function formatSpacingToScss(tokens) {
 
 function convertCamelCaseToKebabCase(string) {
   return string.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, "$1-$2").toLowerCase();
+}
+
+function exportToJS(resolvedTokensByCategory, outDir, outFileName) {
+  const jSExport = formatToJS(resolvedTokensByCategory);
+  exportFile(`${outDir}`, `${outFileName}.json`, jSExport);
+}
+
+function formatToJS(resolvedTokensByCategory) {
+  let jSExport = {};
+  resolvedTokensByCategory.forEach(category => {
+    switch (category.category) {
+      case "colors":
+        jSExport.colors = formatColorsToJS(category.tokens);
+        break;
+      case "typography":
+        jSExport.typograhphy = formatTypographyToJS(category.tokens);
+        break;
+      case "spacing":
+        jSExport.spacing = formatSpacingToJS(category.tokens);
+        break;
+      default:
+        console.warn("Unrecognized category type");
+    }
+  });
+  return JSON.stringify(jSExport);
+}
+
+function formatColorsToJS(tokens) {
+  let colors = {};
+  tokens.forEach(token => {
+    colors[token.name] = {
+      hsl: `hsl(${token.value.h}, ${token.value.s}%, ${token.value.l}%)`,
+      h: token.value.h,
+      s: token.value.s,
+      l: token.value.l
+    };
+  });
+  return colors;
+}
+
+function formatTypographyToJS(tokens) {
+  let typograhphy = {};
+  tokens.forEach(token => {
+    typograhphy[token.name] = token.value;
+  });
+  return typograhphy;
+}
+
+function formatSpacingToJS(tokens) {
+  let spacing = {};
+  tokens.forEach(token => {
+    spacing[token.name] = token.value;
+  });
+  return spacing;
 }
 
 function exportFile(outDir, fileName, data) {
