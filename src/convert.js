@@ -11,7 +11,11 @@ const outFileName = "tokens";
 function main() {
   try {
     program
-      .option("--outdir <outdir>", "output directory", `${__dirname}/../dist`)
+      .option(
+        "--outdir <outdir>",
+        "output directory",
+        `${path.join(process.cwd(), "dist")}`
+      )
       .option("--format <format>", "format to output", ["scss", "json"])
       .parse(process.argv);
     let tokensByCategory = getTokensByCategory(tokensData);
@@ -114,7 +118,12 @@ function convertCamelCaseToKebabCase(string) {
 
 function exportToJS(resolvedTokensByCategory, outDir, outFileName) {
   const jSExport = formatToJS(resolvedTokensByCategory);
-  exportFile(`${outDir}`, `${outFileName}.json`, jSExport);
+  const jSModuleDef = `module.exports = `;
+  exportFile(
+    `${outDir}`,
+    `${outFileName}.js`,
+    jSModuleDef + JSON.stringify(jSExport)
+  );
 }
 
 function formatToJS(resolvedTokensByCategory) {
@@ -134,7 +143,7 @@ function formatToJS(resolvedTokensByCategory) {
         console.warn("Unrecognized category type");
     }
   });
-  return JSON.stringify(jSExport);
+  return jSExport;
 }
 
 function formatColorsToJS(tokens) {
@@ -167,11 +176,12 @@ function formatSpacingToJS(tokens) {
 }
 
 function exportFile(outDir, fileName, data) {
+  const dirname = path.normalize(outDir);
   try {
-    if (!fs.existsSync(path.dirname(outDir))) {
-      fs.mkdirSync(outDir);
+    if (!fs.existsSync(dirname)) {
+      fs.mkdirSync(dirname);
     }
-    fs.writeFile(`${outDir}/${fileName}`, data, err => {
+    fs.writeFile(`${path.join(dirname, fileName)}`, data, err => {
       if (err) {
         throw err;
       }

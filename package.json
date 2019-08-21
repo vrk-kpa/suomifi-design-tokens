@@ -2,11 +2,21 @@
   "name": "suomifi-design-tokens",
   "version": "0.0.1",
   "description": "Design tokens for Suomifi design system",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "repository": "https://github.com/vrk-kpa/suomifi-design-tokens",
   "author": "Joonas Kallunki & Aappo Ålander",
   "license": "MIT",
   "dependencies": {
-    "commander": "3.0.0"
+    "commander": "3.0.0",
+    "copyfiles": "2.1.1"
+  },
+  "scripts": {
+    "build": "node ./src/convert.js",
+    "postbuild": "copyfiles -f ./src/static/* ./dist/"
   }
 }
