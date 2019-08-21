@@ -16,7 +16,7 @@ function main() {
         "output directory",
         `${path.join(process.cwd(), "dist")}`
       )
-      .option("--format <format>", "format to output", ["scss", "json"])
+      .option("--format <format>", "format to output", ["scss", "js"])
       .parse(process.argv);
     let tokensByCategory = getTokensByCategory(tokensData);
     let resolvedTokensByCategory = resolveCategoryDataForTokens(
@@ -26,7 +26,7 @@ function main() {
     if (program.format.includes("scss")) {
       exportToScss(resolvedTokensByCategory, program.outdir, outFileName);
     }
-    if (program.format.includes("json")) {
+    if (program.format.includes("js")) {
       exportToJS(resolvedTokensByCategory, program.outdir, outFileName);
     }
   } catch (err) {
