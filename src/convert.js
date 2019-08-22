@@ -6,7 +6,12 @@ const fs = require("fs");
 const program = require("commander");
 
 const tokensData = require("./tokens.json");
+require.extensions[".template"] = function(module, filename) {
+  module.exports = fs.readFileSync(filename, "utf8");
+};
+const staticInterfaces = require("./interfaces.ts.template");
 const outFileName = "tokens";
+const interfacesOutFileName = "interfaces.d.ts";
 
 function main() {
   try {
@@ -27,7 +32,13 @@ function main() {
       exportToScss(resolvedTokensByCategory, program.outdir, outFileName);
     }
     if (program.format.includes("js")) {
-      exportToJS(resolvedTokensByCategory, program.outdir, outFileName);
+      exportToJS(
+        resolvedTokensByCategory,
+        staticInterfaces,
+        program.outdir,
+        outFileName,
+        interfacesOutFileName
+      );
     }
   } catch (err) {
     console.warn(err);
@@ -116,14 +127,20 @@ function convertCamelCaseToKebabCase(string) {
   return string.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, "$1-$2").toLowerCase();
 }
 
-function exportToJS(resolvedTokensByCategory, outDir, outFileName) {
+function exportToJS(
+  resolvedTokensByCategory,
+  staticInterfaces,
+  outDir,
+  outFileName,
+  interfacesOutFileName
+) {
   const jSExport = formatToJS(resolvedTokensByCategory);
-  const jSModuleDef = `module.exports = `;
-  exportFile(
-    `${outDir}`,
-    `${outFileName}.js`,
-    jSModuleDef + JSON.stringify(jSExport)
+  const typesExport = generateTSInterfaces(
+    resolvedTokensByCategory,
+    staticInterfaces
   );
+  exportFile(`${outDir}`, `${outFileName}.js`, jSExport);
+  exportFile(`${outDir}`, interfacesOutFileName, typesExport);
 }
 
 function formatToJS(resolvedTokensByCategory) {
@@ -143,7 +160,7 @@ function formatToJS(resolvedTokensByCategory) {
         console.warn("Unrecognized category type");
     }
   });
-  return jSExport;
+  return `module.exports = ` + JSON.stringify(jSExport);
 }
 
 function formatColorsToJS(tokens) {
@@ -173,6 +190,71 @@ function formatSpacingToJS(tokens) {
     spacing[token.name] = token.value;
   });
   return spacing;
+}
+
+function generateTSInterfaces(resolvedTokensByCategory, staticInterfaces) {
+  const interfaceExport = Object.entries(resolvedTokensByCategory).reduce(
+    (resultArray, [key, value]) => {
+      switch (value.category) {
+        case "colors": {
+          resultArray.push(
+            ...generateTSInterfaceCategory(
+              value.tokens,
+              "ColorDesingTokens",
+              "ColorToken"
+            )
+          );
+          return resultArray;
+        }
+        case "typography": {
+          resultArray.push(
+            ...generateTSInterfaceCategory(
+              value.tokens,
+              "TypograhpyDesingTokens",
+              "TypographyToken"
+            )
+          );
+          return resultArray;
+        }
+        case "spacing": {
+          resultArray.push(
+            ...generateTSInterfaceCategory(
+              value.tokens,
+              "SpacingDesingTokens",
+              "ValueUnit"
+            )
+          );
+          return resultArray;
+        }
+        default: {
+          console.warn("Unrecognized category type");
+          return resultArray;
+        }
+      }
+    },
+    []
+  );
+  return staticInterfaces + "\n" + interfaceExport.join("");
+}
+
+function generateTSInterfaceCategory(
+  tokens,
+  categoryInterfaceName,
+  cateogryPropertyInterfaceName
+) {
+  return [
+    `export interface ${categoryInterfaceName} {\n`,
+    ...generateTSInterfaceProperties(tokens, cateogryPropertyInterfaceName),
+    "}\n\n"
+  ];
+}
+
+function generateTSInterfaceProperties(tokens, interfaceName) {
+  let interfaceProperties = [];
+  tokens.forEach(token => {
+    interfaceProperties.push(`  ${token.name}: ${interfaceName};\n`);
+  });
+  return interfaceProperties;
 }
 
 function exportFile(outDir, fileName, data) {
