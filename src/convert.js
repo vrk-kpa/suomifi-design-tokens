@@ -11,6 +11,7 @@ require.extensions[".template"] = function(module, filename) {
 };
 const staticInterfaces = require("./interfaces.ts.template");
 const outFileName = "tokens";
+const outFileJSName = "index";
 const interfacesOutFileName = "interfaces.d.ts";
 
 function main() {
@@ -19,24 +20,20 @@ function main() {
       .option(
         "--outdir <outdir>",
         "output directory",
-        `${path.join(process.cwd(), "dist")}`
+        `${path.join(process.cwd(), "tmp")}`
       )
       .option("--format <format>", "format to output", ["scss", "js"])
       .parse(process.argv);
-    let tokensByCategory = getTokensByCategory(tokensData);
-    let resolvedTokensByCategory = resolveCategoryDataForTokens(
-      tokensByCategory,
-      tokensData.tokens
-    );
+    const tokensByCategory = getTokensByCategory(tokensData, tokensData.tokens);
     if (program.format.includes("scss")) {
-      exportToScss(resolvedTokensByCategory, program.outdir, outFileName);
+      exportToScss(tokensByCategory, program.outdir, outFileName);
     }
     if (program.format.includes("js")) {
       exportToJS(
-        resolvedTokensByCategory,
+        tokensByCategory,
         staticInterfaces,
         program.outdir,
-        outFileName,
+        outFileJSName,
         interfacesOutFileName
       );
     }
@@ -45,52 +42,51 @@ function main() {
   }
 }
 
-function getTokensByCategory(tokensData) {
-  return Object.keys(tokensData.categories).map(key => {
+function getTokensByCategory(tokensData, tokens) {
+  return Object.entries(tokensData.categories).map(([key, category]) => {
     return {
       category: key,
-      prefix: tokensData.categories[key].tokenPrefix,
-      tokens: []
+      prefix: category.tokenPrefix,
+      tokens: getCategoryTokens(key, category.tokenPrefix, tokens)
     };
   });
 }
 
-function resolveCategoryDataForTokens(tokensByCategory, tokens) {
-  return tokensByCategory.map(category => {
-    Object.keys(tokens).forEach(key => {
-      if (tokens[key].category === category.category) {
-        tokens[key].name = key;
-        tokens[key].prefix = `${category.prefix}`;
-        category.tokens.push(tokens[key]);
-      }
-    });
-    return category;
-  });
+function getCategoryTokens(name, prefix, tokens) {
+  return Object.entries(tokens).reduce((resultArray, [key, token]) => {
+    if (token.category === name) {
+      resultArray.push({
+        ...token,
+        name: key,
+        prefix: `${prefix}`
+      });
+    }
+    return resultArray;
+  }, []);
 }
 
-function exportToScss(resolvedTokensByCategory, outDir, outFileName) {
-  const scssExportData = formatToScss(resolvedTokensByCategory);
-  exportFile(`${outDir}`, `${outFileName}.scss`, scssExportData);
+function exportToScss(tokensByCategory, outDir, outFileName) {
+  const scssExportData = formatToScss(tokensByCategory);
+  exportFile(`${outDir}`, `${outFileName}.scss`, scssExportData.join(""));
 }
 
-function formatToScss(resolvedTokensByCategory) {
-  let scssExport = [];
-  resolvedTokensByCategory.forEach(category => {
+function formatToScss(tokensByCategory) {
+  return tokensByCategory.reduce((resultArray, category) => {
     switch (category.category) {
       case "colors":
-        scssExport.push(...formatColorsToScss(category.tokens));
+        resultArray.push(...formatColorsToScss(category.tokens));
         break;
       case "typography":
-        scssExport.push(...formatTypographyToScss(category.tokens));
+        resultArray.push(...formatTypographyToScss(category.tokens));
         break;
       case "spacing":
-        scssExport.push(...formatSpacingToScss(category.tokens));
+        resultArray.push(...formatSpacingToScss(category.tokens));
         break;
       default:
         console.warn("Unrecognized category type");
     }
-  });
-  return scssExport.join("\n");
+    return resultArray;
+  }, []);
 }
 
 function formatColorsToScss(tokens) {
@@ -128,72 +124,79 @@ function convertCamelCaseToKebabCase(string) {
 }
 
 function exportToJS(
-  resolvedTokensByCategory,
+  tokensByCategory,
   staticInterfaces,
   outDir,
   outFileName,
   interfacesOutFileName
 ) {
-  const jSExport = formatToJS(resolvedTokensByCategory);
-  const typesExport = generateTSInterfaces(
-    resolvedTokensByCategory,
-    staticInterfaces
-  );
+  const jSExport = formatToJS(tokensByCategory);
+  const typesExport = generateTSInterfaces(tokensByCategory, staticInterfaces);
   exportFile(`${outDir}`, `${outFileName}.js`, jSExport);
   exportFile(`${outDir}`, interfacesOutFileName, typesExport);
 }
 
-function formatToJS(resolvedTokensByCategory) {
-  let jSExport = {};
-  resolvedTokensByCategory.forEach(category => {
-    switch (category.category) {
-      case "colors":
-        jSExport.colors = formatColorsToJS(category.tokens);
-        break;
-      case "typography":
-        jSExport.typograhphy = formatTypographyToJS(category.tokens);
-        break;
-      case "spacing":
-        jSExport.spacing = formatSpacingToJS(category.tokens);
-        break;
-      default:
-        console.warn("Unrecognized category type");
-    }
-  });
-  return `module.exports = ` + JSON.stringify(jSExport);
+function formatToJS(tokensByCategory) {
+  const jSExport = Object.assign(
+    {},
+    ...tokensByCategory.reduce((resultArray, category) => {
+      switch (category.category) {
+        case "colors":
+          resultArray.push(formatColorsToJS(category.tokens));
+          break;
+        case "typography":
+          resultArray.push(formatTypographyToJS(category.tokens));
+          break;
+        case "spacing":
+          resultArray.push(formatSpacingToJS(category.tokens));
+          break;
+        default:
+          console.warn("Unrecognized category type");
+      }
+      return resultArray;
+    }, [])
+  );
+  return `export const tokens = ` + JSON.stringify(jSExport);
 }
 
 function formatColorsToJS(tokens) {
-  let colors = {};
-  tokens.forEach(token => {
-    colors[token.name] = {
-      hsl: `hsl(${token.value.h}, ${token.value.s}%, ${token.value.l}%)`,
-      h: token.value.h,
-      s: token.value.s,
-      l: token.value.l
-    };
-  });
-  return colors;
+  return Object.assign(
+    {},
+    ...tokens.map(token => {
+      return {
+        hsl: `hsl(${token.value.h}, ${token.value.s}%, ${token.value.l}%)`,
+        h: token.value.h,
+        s: token.value.s,
+        l: token.value.l
+      };
+    })
+  );
 }
 
 function formatTypographyToJS(tokens) {
-  let typograhphy = {};
-  tokens.forEach(token => {
-    typograhphy[token.name] = token.value;
-  });
-  return typograhphy;
+  return Object.assign(
+    {},
+    ...tokens.map(token => {
+      return {
+        [token.name]: token.value
+      };
+    })
+  );
 }
 
 function formatSpacingToJS(tokens) {
-  let spacing = {};
-  tokens.forEach(token => {
-    spacing[token.name] = token.value;
-  });
-  return spacing;
+  return Object.assign(
+    {},
+    ...tokens.map(token => {
+      return {
+        [token.name]: token.value
+      };
+    })
+  );
 }
 
-function generateTSInterfaces(resolvedTokensByCategory, staticInterfaces) {
-  const interfaceExport = Object.entries(resolvedTokensByCategory).reduce(
+function generateTSInterfaces(tokensByCategory, staticInterfaces) {
+  const interfaceExport = Object.entries(tokensByCategory).reduce(
     (resultArray, [key, value]) => {
       switch (value.category) {
         case "colors": {
@@ -234,7 +237,7 @@ function generateTSInterfaces(resolvedTokensByCategory, staticInterfaces) {
     },
     []
   );
-  return staticInterfaces + "\n" + interfaceExport.join("");
+  return staticInterfaces + interfaceExport;
 }
 
 function generateTSInterfaceCategory(
@@ -243,18 +246,16 @@ function generateTSInterfaceCategory(
   cateogryPropertyInterfaceName
 ) {
   return [
-    `export interface ${categoryInterfaceName} {\n`,
+    `export interface ${categoryInterfaceName} {`,
     ...generateTSInterfaceProperties(tokens, cateogryPropertyInterfaceName),
-    "}\n\n"
+    "}"
   ];
 }
 
 function generateTSInterfaceProperties(tokens, interfaceName) {
-  let interfaceProperties = [];
-  tokens.forEach(token => {
-    interfaceProperties.push(`  ${token.name}: ${interfaceName};\n`);
+  return tokens.map(token => {
+    return `${token.name}: ${interfaceName};`;
   });
-  return interfaceProperties;
 }
 
 function exportFile(outDir, fileName, data) {

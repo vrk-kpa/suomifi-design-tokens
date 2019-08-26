@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "Design tokens for Suomifi design system",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
   "files": [
     "dist",
     "README.md"
@@ -16,7 +17,21 @@
     "copyfiles": "2.1.1"
   },
   "scripts": {
-    "build": "node ./src/convert.js",
-    "postbuild": "copyfiles -f ./src/static/* ./dist/"
+    "prettier": "prettier --write 'dist/**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
+    "clean:tmp": "rimraf tmp",
+    "clean:dist": "rimraf dist",
+    "build:convertjs": "node ./src/convert.js --format js --outdir ./tmp",
+    "build:convertscss": "node ./src/convert.js --format scss --outdir ./dist",
+    "build:rollup": "rollup --config",
+    "build:copyfiles": "copyfiles -f ./src/static/* ./dist/esm/",
+    "prebuild": "npm-run-all clean:tmp clean:dist build:convertjs build:convertscss",
+    "build": "npm-run-all build:rollup",
+    "postbuild": "npm-run-all build:copyfiles prettier clean:tmp"
+  },
+  "devDependencies": {
+    "npm-run-all": "4.1.5",
+    "prettier": "1.18.2",
+    "rimraf": "3.0.0",
+    "rollup": "1.20.2"
   }
 }
