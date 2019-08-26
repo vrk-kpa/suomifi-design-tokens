@@ -24,7 +24,8 @@
     "build:convertscss": "node ./src/convert.js --format scss --outdir ./dist",
     "build:rollup": "rollup --config",
     "build:copyfiles": "copyfiles -f ./src/static/* ./dist/esm/",
-    "prebuild": "npm-run-all clean:tmp clean:dist build:convertjs build:convertscss",
+    "build:copytypes": "copyfiles -f ./tmp/*.d.ts ./dist/esm/",
+    "prebuild": "npm-run-all clean:tmp clean:dist build:convertjs build:copytypes build:convertscss",
     "build": "npm-run-all build:rollup",
     "postbuild": "npm-run-all build:copyfiles prettier clean:tmp"
   },

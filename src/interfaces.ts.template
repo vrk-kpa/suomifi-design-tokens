@@ -22,3 +22,4 @@ export interface ValueUnit {
   value: number | string;
   unit: string | null;
 }
+

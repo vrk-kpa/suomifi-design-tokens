@@ -9,6 +9,7 @@ const tokensData = require("./tokens.json");
 require.extensions[".template"] = function(module, filename) {
   module.exports = fs.readFileSync(filename, "utf8");
 };
+const scssPrefix = "fi";
 const staticInterfaces = require("./interfaces.ts.template");
 const outFileName = "tokens";
 const outFileJSName = "index";
@@ -26,7 +27,7 @@ function main() {
       .parse(process.argv);
     const tokensByCategory = getTokensByCategory(tokensData, tokensData.tokens);
     if (program.format.includes("scss")) {
-      exportToScss(tokensByCategory, program.outdir, outFileName);
+      exportToScss(tokensByCategory, scssPrefix, program.outdir, outFileName);
     }
     if (program.format.includes("js")) {
       exportToJS(
@@ -65,22 +66,24 @@ function getCategoryTokens(name, prefix, tokens) {
   }, []);
 }
 
-function exportToScss(tokensByCategory, outDir, outFileName) {
-  const scssExportData = formatToScss(tokensByCategory);
+function exportToScss(tokensByCategory, scssPrefix, outDir, outFileName) {
+  const scssExportData = formatToScss(tokensByCategory, scssPrefix);
   exportFile(`${outDir}`, `${outFileName}.scss`, scssExportData.join(""));
 }
 
-function formatToScss(tokensByCategory) {
+function formatToScss(tokensByCategory, scssPrefix) {
   return tokensByCategory.reduce((resultArray, category) => {
     switch (category.category) {
       case "colors":
-        resultArray.push(...formatColorsToScss(category.tokens));
+        resultArray.push(...formatColorsToScss(category.tokens, scssPrefix));
         break;
       case "typography":
-        resultArray.push(...formatTypographyToScss(category.tokens));
+        resultArray.push(
+          ...formatTypographyToScss(category.tokens, scssPrefix)
+        );
         break;
       case "spacing":
-        resultArray.push(...formatSpacingToScss(category.tokens));
+        resultArray.push(...formatSpacingToScss(category.tokens, scssPrefix));
         break;
       default:
         console.warn("Unrecognized category type");
@@ -89,17 +92,19 @@ function formatToScss(tokensByCategory) {
   }, []);
 }
 
-function formatColorsToScss(tokens) {
+function formatColorsToScss(tokens, scssPrefix) {
   return tokens.map(token => {
-    return `$${token.prefix}-${convertCamelCaseToKebabCase(token.name)}: hsl(${
-      token.value.h
-    }, ${token.value.s}%, ${token.value.l}%);`;
+    return `$${scssPrefix}-${token.prefix}-${convertCamelCaseToKebabCase(
+      token.name
+    )}: hsl(${token.value.h}, ${token.value.s}%, ${token.value.l}%);`;
   });
 }
 
-function formatTypographyToScss(tokens) {
+function formatTypographyToScss(tokens, scssPrefix) {
   return tokens.map(token => {
-    return `@mixin ${token.prefix}-${convertCamelCaseToKebabCase(token.name)} {
+    return `@mixin ${scssPrefix}-${token.prefix}-${convertCamelCaseToKebabCase(
+      token.name
+    )} {
       font-family: "${token.value.fontFamily.join(", ")}";
       font-size: "${token.value.fontSize.value}${
       token.value.fontSize.unit !== null ? token.value.fontSize.unit : ""
@@ -111,9 +116,9 @@ function formatTypographyToScss(tokens) {
   });
 }
 
-function formatSpacingToScss(tokens) {
+function formatSpacingToScss(tokens, scssPrefix) {
   return tokens.map(token => {
-    return `$${token.prefix}-${convertCamelCaseToKebabCase(
+    return `$${scssPrefix}-${token.prefix}-${convertCamelCaseToKebabCase(
       token.name
     )}: "${token.value.value + token.value.unit}";`;
   });
@@ -156,7 +161,7 @@ function formatToJS(tokensByCategory) {
       return resultArray;
     }, [])
   );
-  return `export const tokens = ` + JSON.stringify(jSExport);
+  return "export const tokens = " + JSON.stringify(jSExport);
 }
 
 function formatColorsToJS(tokens) {
@@ -237,7 +242,7 @@ function generateTSInterfaces(tokensByCategory, staticInterfaces) {
     },
     []
   );
-  return staticInterfaces + interfaceExport;
+  return staticInterfaces + interfaceExport.join("");
 }
 
 function generateTSInterfaceCategory(
@@ -264,7 +269,7 @@ function exportFile(outDir, fileName, data) {
     if (!fs.existsSync(dirname)) {
       fs.mkdirSync(dirname);
     }
-    fs.writeFile(`${path.join(dirname, fileName)}`, data, err => {
+    fs.writeFile(path.join(dirname, fileName), data, err => {
       if (err) {
         throw err;
       }
