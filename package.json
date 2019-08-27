@@ -17,17 +17,17 @@
     "copyfiles": "2.1.1"
   },
   "scripts": {
-    "prettier": "prettier --write 'dist/**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
+    "prettier": "prettier --write 'tmp/**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
     "clean:tmp": "rimraf tmp",
     "clean:dist": "rimraf dist",
-    "build:convertjs": "node ./src/convert.js --format js --outdir ./tmp",
-    "build:convertscss": "node ./src/convert.js --format scss --outdir ./dist",
+    "build:convert": "node ./src/convert.js --format 'js scss' --outdir ./tmp",
     "build:rollup": "rollup --config",
     "build:copyfiles": "copyfiles -f ./src/static/* ./dist/esm/",
     "build:copytypes": "copyfiles -f ./tmp/*.d.ts ./dist/esm/",
-    "prebuild": "npm-run-all clean:tmp clean:dist build:convertjs build:copytypes build:convertscss",
+    "build:copyscss": "copyfiles -f ./tmp/*.scss ./dist/",
+    "prebuild": "npm-run-all clean:tmp clean:dist build:convert prettier",
     "build": "npm-run-all build:rollup",
-    "postbuild": "npm-run-all build:copyfiles prettier clean:tmp"
+    "postbuild": "npm-run-all build:copyscss build:copytypes build:copyfiles clean:tmp"
   },
   "devDependencies": {
     "npm-run-all": "4.1.5",

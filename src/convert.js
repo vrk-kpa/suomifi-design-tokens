@@ -18,12 +18,8 @@ const interfacesOutFileName = "interfaces.d.ts";
 function main() {
   try {
     program
-      .option(
-        "--outdir <outdir>",
-        "output directory",
-        `${path.join(process.cwd(), "tmp")}`
-      )
-      .option("--format <format>", "format to output", ["scss", "js"])
+      .option("--outdir <outdir>", "output directory")
+      .option("--format <format>", "format to output") // supports only scss and js
       .parse(process.argv);
     const tokensByCategory = getTokensByCategory(tokensData, tokensData.tokens);
     if (program.format.includes("scss")) {
