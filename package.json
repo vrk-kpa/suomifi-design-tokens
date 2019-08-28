@@ -17,7 +17,7 @@
     "copyfiles": "2.1.1"
   },
   "scripts": {
-    "prettier": "prettier --write 'tmp/**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
+    "prettier": "prettier --write \"tmp/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "clean:tmp": "rimraf tmp",
     "clean:dist": "rimraf dist",
     "build:convert": "node ./src/convert.js --format 'js scss' --outdir ./tmp",
