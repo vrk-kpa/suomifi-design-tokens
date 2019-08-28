@@ -1,0 +1,13 @@
+.DS_STORE
+*.log
+
+# build output
+tmp
+dist
+
+# dependencies
+node_modules
+
+# editors
+.idea
+.vscode

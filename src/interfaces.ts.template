@@ -1,0 +1,25 @@
+export interface DesignTokens {
+  colors: ColorDesingTokens;
+  typography: TypograhpyDesingTokens;
+  spacing: SpacingDesingTokens;
+}
+
+export interface ColorToken {
+  hsl: string;
+  h: number;
+  s: number;
+  l: number;
+}
+
+export interface TypographyToken {
+  fontFamily: Array<string>;
+  fontSize: ValueUnit;
+  lineHeight: ValueUnit;
+  fontWeight: number;
+}
+
+export interface ValueUnit {
+  value: number | string;
+  unit: string | null;
+}
+
