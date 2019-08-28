@@ -2,6 +2,7 @@
 *.log
 
 # build output
+tmp
 dist
 
 # dependencies

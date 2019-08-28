@@ -1,4 +1,3 @@
-import * as originalTokens from "./tokens.js";
 import {
   DesignTokens,
   ColorDesingTokens,
@@ -10,7 +9,7 @@ import {
 } from "./interfaces";
 
 declare module "suomifi-design-tokens" {
-  const tokens: DesignTokens = originalTokens;
+  declare const tokens: DesignTokens;
   export {
     tokens,
     DesignTokens,

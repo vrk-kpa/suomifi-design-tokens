@@ -143,13 +143,15 @@ function formatToJS(tokensByCategory) {
     ...tokensByCategory.reduce((resultArray, category) => {
       switch (category.category) {
         case "colors":
-          resultArray.push(formatColorsToJS(category.tokens));
+          resultArray.push({ colors: formatColorsToJS(category.tokens) });
           break;
         case "typography":
-          resultArray.push(formatTypographyToJS(category.tokens));
+          resultArray.push({
+            typography: formatTypographyToJS(category.tokens)
+          });
           break;
         case "spacing":
-          resultArray.push(formatSpacingToJS(category.tokens));
+          resultArray.push({ spacing: formatSpacingToJS(category.tokens) });
           break;
         default:
           console.warn("Unrecognized category type");
@@ -165,10 +167,12 @@ function formatColorsToJS(tokens) {
     {},
     ...tokens.map(token => {
       return {
-        hsl: `hsl(${token.value.h}, ${token.value.s}%, ${token.value.l}%)`,
-        h: token.value.h,
-        s: token.value.s,
-        l: token.value.l
+        [token.name]: {
+          hsl: `hsl(${token.value.h}, ${token.value.s}%, ${token.value.l}%)`,
+          h: token.value.h,
+          s: token.value.s,
+          l: token.value.l
+        }
       };
     })
   );
