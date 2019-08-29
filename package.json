@@ -19,7 +19,7 @@
     "build:tsc": "tsc ./tmp/index.ts --declaration --outDir ./dist",
     "build:copyscss": "copyfiles -f ./tmp/*.scss ./dist/",
     "prebuild": "npm-run-all clean:tmp clean:dist build:convert prettier",
-    "build": "npm build:tsc",
+    "build": "npm-run-all build:tsc",
     "postbuild": "npm-run-all build:copyscss clean:tmp"
   },
   "devDependencies": {
