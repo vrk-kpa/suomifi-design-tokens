@@ -10,28 +10,28 @@ require.extensions[".template"] = function(module, filename) {
   module.exports = fs.readFileSync(filename, "utf8");
 };
 const scssPrefix = "fi";
+const tokensInterfaceName = "DesignTokens"; // interface name matching the template
 const staticInterfaces = require("./interfaces.ts.template");
 const outFileName = "tokens";
-const outFileJSName = "index";
-const interfacesOutFileName = "interfaces.d.ts";
+const outFileTSName = "index";
 
 function main() {
   try {
     program
       .option("--outdir <outdir>", "output directory")
-      .option("--format <format>", "format to output") // supports only scss and js
+      .option("--format <format>", "format to output") // supports only scss and ts
       .parse(process.argv);
     const tokensByCategory = getTokensByCategory(tokensData, tokensData.tokens);
     if (program.format.includes("scss")) {
       exportToScss(tokensByCategory, scssPrefix, program.outdir, outFileName);
     }
-    if (program.format.includes("js")) {
-      exportToJS(
+    if (program.format.includes("ts")) {
+      exportToTS(
         tokensByCategory,
         staticInterfaces,
         program.outdir,
-        outFileJSName,
-        interfacesOutFileName
+        outFileTSName,
+        tokensInterfaceName
       );
     }
   } catch (err) {
@@ -124,34 +124,33 @@ function convertCamelCaseToKebabCase(string) {
   return string.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, "$1-$2").toLowerCase();
 }
 
-function exportToJS(
+function exportToTS(
   tokensByCategory,
   staticInterfaces,
   outDir,
   outFileName,
-  interfacesOutFileName
+  tokensInterfaceName
 ) {
-  const jSExport = formatToJS(tokensByCategory);
+  const tSExport = formatToTS(tokensByCategory, tokensInterfaceName);
   const typesExport = generateTSInterfaces(tokensByCategory, staticInterfaces);
-  exportFile(`${outDir}`, `${outFileName}.js`, jSExport);
-  exportFile(`${outDir}`, interfacesOutFileName, typesExport);
+  exportFile(`${outDir}`, `${outFileName}.ts`, typesExport + tSExport);
 }
 
-function formatToJS(tokensByCategory) {
-  const jSExport = Object.assign(
+function formatToTS(tokensByCategory, tokensInterfaceName) {
+  const tSExport = Object.assign(
     {},
     ...tokensByCategory.reduce((resultArray, category) => {
       switch (category.category) {
         case "colors":
-          resultArray.push({ colors: formatColorsToJS(category.tokens) });
+          resultArray.push({ colors: formatColorsToTS(category.tokens) });
           break;
         case "typography":
           resultArray.push({
-            typography: formatTypographyToJS(category.tokens)
+            typography: formatTypographyToTS(category.tokens)
           });
           break;
         case "spacing":
-          resultArray.push({ spacing: formatSpacingToJS(category.tokens) });
+          resultArray.push({ spacing: formatSpacingToTS(category.tokens) });
           break;
         default:
           console.warn("Unrecognized category type");
@@ -159,10 +158,12 @@ function formatToJS(tokensByCategory) {
       return resultArray;
     }, [])
   );
-  return "export const tokens = " + JSON.stringify(jSExport);
+  return `export const tokens: ${tokensInterfaceName} = ${JSON.stringify(
+    tSExport
+  )}`;
 }
 
-function formatColorsToJS(tokens) {
+function formatColorsToTS(tokens) {
   return Object.assign(
     {},
     ...tokens.map(token => {
@@ -178,7 +179,7 @@ function formatColorsToJS(tokens) {
   );
 }
 
-function formatTypographyToJS(tokens) {
+function formatTypographyToTS(tokens) {
   return Object.assign(
     {},
     ...tokens.map(token => {
@@ -189,7 +190,7 @@ function formatTypographyToJS(tokens) {
   );
 }
 
-function formatSpacingToJS(tokens) {
+function formatSpacingToTS(tokens) {
   return Object.assign(
     {},
     ...tokens.map(token => {

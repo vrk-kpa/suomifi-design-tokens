@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "description": "Design tokens for Suomifi design system",
   "main": "dist/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/esm/index.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
     "dist",
     "README.md"
@@ -12,27 +11,23 @@
   "repository": "https://github.com/vrk-kpa/suomifi-design-tokens",
   "author": "Joonas Kallunki & Aappo Ålander",
   "license": "MIT",
-  "dependencies": {
-    "commander": "3.0.0",
-    "copyfiles": "2.1.1"
-  },
   "scripts": {
-    "prettier": "prettier --write \"tmp/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "prettier": "prettier --write \"tmp/**/*.scss\"",
     "clean:tmp": "rimraf tmp",
     "clean:dist": "rimraf dist",
-    "build:convert": "node ./src/convert.js --format 'js scss' --outdir ./tmp",
-    "build:rollup": "rollup --config",
-    "build:copyfiles": "copyfiles -f ./src/static/* ./dist/esm/",
-    "build:copytypes": "copyfiles -f ./tmp/*.d.ts ./dist/esm/",
+    "build:convert": "node ./src/convert.js --format 'ts scss' --outdir ./tmp",
+    "build:tsc": "tsc ./tmp/index.ts --declaration --outDir ./dist",
     "build:copyscss": "copyfiles -f ./tmp/*.scss ./dist/",
     "prebuild": "npm-run-all clean:tmp clean:dist build:convert prettier",
-    "build": "npm-run-all build:rollup",
-    "postbuild": "npm-run-all build:copyscss build:copytypes build:copyfiles clean:tmp"
+    "build": "npm-run-all build:tsc",
+    "postbuild": "npm-run-all build:copyscss clean:tmp"
   },
   "devDependencies": {
     "npm-run-all": "4.1.5",
     "prettier": "1.18.2",
     "rimraf": "3.0.0",
-    "rollup": "1.20.2"
+    "typescript": "3.6.2",
+    "commander": "3.0.0",
+    "copyfiles": "2.1.1"
   }
 }
