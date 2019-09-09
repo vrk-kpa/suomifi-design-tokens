@@ -2,8 +2,7 @@
 
 ## ℹ Token Data
 
-The design system tokens are stored in the tokens.json file.
-The file consists of token categories and tokens.
+The design system tokens are stored in the tokens.json file. The file consists of token categories and tokens.
 
 ### 📖Categories
 

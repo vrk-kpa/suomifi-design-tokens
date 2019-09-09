@@ -5,10 +5,10 @@ import {
   SpacingDesingTokens,
   ColorToken,
   TypographyToken,
-  ValueUnit
-} from "./interfaces";
+  ValueUnit,
+} from './interfaces';
 
-declare module "suomifi-design-tokens" {
+declare module 'suomifi-design-tokens' {
   declare const tokens: DesignTokens;
   export {
     tokens,
@@ -18,6 +18,6 @@ declare module "suomifi-design-tokens" {
     SpacingDesingTokens,
     ColorToken,
     TypographyToken,
-    ValueUnit
+    ValueUnit,
   };
 }
