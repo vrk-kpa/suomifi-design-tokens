@@ -4,7 +4,7 @@
 
 The design system tokens are stored in the tokens.json file. The file consists of token categories and tokens.
 
-### 📖Categories
+### 📖 Categories
 
 Design tokens are divided into categories based on token type. Categories include a token prefix for the tokens in the category and description information. All tokens belong to exactly one category.
 
@@ -14,7 +14,7 @@ Current categories are:
 - Typography
 - Spacing
 
-### 📃Tokens
+### 📃 Tokens
 
 All tokens have a category, version, value, type and comments.
 
@@ -59,7 +59,7 @@ and see that the build passes without failures
 6. Create a pull request for your branch and get the needed reviews.
 7. Merge the pull request to master.
 
-### 🌍 Publing the changes
+### 🌍 Publishing the changes
 
 1. Create a new branch for version change
 2. Change the version in **package.json** according to sematic versioning principles [semver.org](https://semver.org/)

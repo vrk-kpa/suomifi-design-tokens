@@ -25,12 +25,20 @@ yarn add suomifi-design-tokens
 Tokens are available as named SCSS variables and mixins with **\$fi-** prefix. Tokens can be imported to scss files:
 
 ```scss
-@import '~suomifi-desing-tokens/tokens';
+@import '~suomifi-design-tokens/dist/tokens';
 ```
 
-### Colors
+### 🎨 Colors
 
 Color tokens are available as variables with additional **colors-** prefix. Colors are provided as hsl values.
+
+Example from **tokens.scss**:
+
+```scss
+$fi-color-brand-base: hsl(214, 100%, 24%);
+```
+
+Example use case:
 
 ```scss
 .custom-class {
@@ -38,9 +46,21 @@ Color tokens are available as variables with additional **colors-** prefix. Colo
 }
 ```
 
-### Typography
+### 🖋 Typography
 
 Typography tokens are available as mixins with additional **typograhpy-** prefix.
+
+Example from **tokens.scss**:
+
+```scss
+@mixin fi-text-heading1 {
+  font-family: 'Source Sans Pro, Helvetica Neue, Arial, sans-serif';
+  font-size: '40px';
+  line-height: '48px';
+}
+```
+
+Example use case:
 
 ```scss
 h1 {
@@ -48,9 +68,17 @@ h1 {
 }
 ```
 
-### Spacing
+### 📏 Spacing
 
 Spacing tokens are available as variables with additional **spacing-** prefix.
+
+Example from **tokens.scss**:
+
+```scss
+$fi-spacing-l: '32px';
+```
+
+Example use case:
 
 ```scss
 .custom-class {
@@ -75,9 +103,19 @@ import { tokens } from "suomifi-design-tokens";
 import { DesignTokens }
 ```
 
-### Colors
+### 🎨 Colors
 
 Color tokens are available with **colors** property. Colors are provided as both separated h, s and l values and as combined hsl string.
+
+Example from **tokens object**:
+
+```js
+exports.tokens = {
+  colors: {
+    whiteBase: { hsl: 'hsl(0, 0%, 100%)', h: 0, s: 0, l: 100 }
+  }
+};
+```
 
 JavaScript example:
 
@@ -94,9 +132,29 @@ const brandBase: ColorToken = tokens.colors.brandBase;
 const brandBaseHsl: string = brandBase.hsl;
 ```
 
-### Typography
+### 🖋 Typography
 
 Typography tokens are available with **typograhpy** property. Typography is provided with fontFamily, fontSize, lineHeight and fontWeight.
+
+Example from **tokens object**:
+
+```js
+exports.tokens = {
+  typography: {
+    heading1: {
+      fontFamily: [
+        'Source Sans Pro',
+        'Helvetica Neue',
+        'Arial',
+        'sans-serif'
+      ],
+      fontSize: { value: 40, unit: 'px' },
+      lineHeight: { value: 48, unit: 'px' },
+      fontWeight: 300
+    }
+  }
+};
+```
 
 JavaScript example:
 
@@ -118,9 +176,19 @@ const heading1FontSize: string =
 const heading1FontFamily: string = Array.join(heading1.fontFamily);
 ```
 
-### Spacing
+### 📏 Spacing
 
 Spacing tokens are available with **spacing** property. Spacings are provided with numerical value and format string.
+
+Example from **tokens object**:
+
+```js
+exports.tokens = {
+  spacing: {
+    l: { value: 32, unit: 'px' }
+  }
+};
+```
 
 JavaScript example:
 
