@@ -55,8 +55,8 @@ Example from **tokens.scss**:
 ```scss
 @mixin fi-text-heading1 {
   font-family: 'Source Sans Pro, Helvetica Neue, Arial, sans-serif';
-  font-size: '40px';
-  line-height: '48px';
+  font-size: 40px;
+  line-height: 48px;
 }
 ```
 
@@ -75,7 +75,7 @@ Spacing tokens are available as variables with additional **spacing-** prefix.
 Example from **tokens.scss**:
 
 ```scss
-$fi-spacing-l: '32px';
+$fi-spacing-l: 32px;
 ```
 
 Example use case:
