@@ -12,7 +12,7 @@ export interface ColorToken {
 }
 
 export interface TypographyToken {
-  fontFamily: Array<string>;
+  fontFamily: string;
   fontSize: ValueUnit;
   lineHeight: ValueUnit;
   fontWeight: number;
