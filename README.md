@@ -30,7 +30,7 @@ Tokens are available as named SCSS variables and mixins with **\$fi-** prefix. T
 
 ### 🎨 Colors
 
-Color tokens are available as variables with additional **colors-** prefix. Colors are provided as hsl values.
+Color tokens are available as variables with additional **color-** prefix. Colors are provided as hsl values.
 
 Example from **tokens.scss**:
 
@@ -48,15 +48,17 @@ Example use case:
 
 ### 🖋 Typography
 
-Typography tokens are available as mixins with additional **typograhpy-** prefix.
+Typography tokens are available as mixins with additional **text-** prefix.
 
 Example from **tokens.scss**:
 
 ```scss
 @mixin fi-text-heading1 {
-  font-family: 'Source Sans Pro, Helvetica Neue, Arial, sans-serif';
+  font-family: 'Source Sans Pro', 'Helvetica Neue', 'Arial',
+    sans-serif;
   font-size: 40px;
   line-height: 48px;
+  font-weight: 300;
 }
 ```
 
@@ -99,8 +101,7 @@ import { tokens } from 'suomifi-design-tokens';
 TypeScript example with typings:
 
 ```ts
-import { tokens } from "suomifi-design-tokens";
-import { DesignTokens }
+import { tokens, DesignTokens } from 'suomifi-design-tokens';
 ```
 
 ### 🎨 Colors
@@ -142,12 +143,8 @@ Example from **tokens object**:
 exports.tokens = {
   typography: {
     heading1: {
-      fontFamily: [
-        'Source Sans Pro',
-        'Helvetica Neue',
-        'Arial',
-        'sans-serif'
-      ],
+      fontFamily:
+        "'Source Sans Pro', 'Helvetica Neue', 'Arial', sans-serif",
       fontSize: { value: 40, unit: 'px' },
       lineHeight: { value: 48, unit: 'px' },
       fontWeight: 300
@@ -162,7 +159,7 @@ JavaScript example:
 const heading1 = tokens.typograhpy.heading1;
 const heading1FontSize =
   heading1.fontSize.value + heading1.fontSize.unit;
-const heading1FontFamily = Array.join(heading1.fontFamily);
+const heading1FontFamily = heading1.fontFamily;
 ```
 
 TypeScript example with typings:
@@ -173,7 +170,7 @@ import { TypographyToken } from 'suomifi-desing-tokens';
 const heading1: TypographyToken = tokens.typography.heading1;
 const heading1FontSize: string =
   heading1.fontSize.value + heading1.fontSize.unit;
-const heading1FontFamily: string = Array.join(heading1.fontFamily);
+const heading1FontFamily: string = heading1.fontFamily;
 ```
 
 ### 📏 Spacing

@@ -110,6 +110,7 @@ function formatTypographyToScss(tokens, scssPrefix) {
       line-height: ${token.value.lineHeight.value}${
       token.value.lineHeight.unit !== null ? token.value.lineHeight.unit : ''
     };
+      font-weight: ${token.value.fontWeight};
     }`;
   });
 }
