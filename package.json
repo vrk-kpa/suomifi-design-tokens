@@ -15,7 +15,7 @@
     "prettier": "prettier --write \"tmp/**/*.scss\"",
     "clean:tmp": "rimraf tmp",
     "clean:dist": "rimraf dist",
-    "build:convert": "node ./src/convert.js --format 'ts scss' --outdir ./tmp",
+    "build:convert": "node ./src/convert.js --format \"ts scss\" --outdir ./tmp",
     "build:tsc": "tsc ./tmp/index.ts --declaration --outDir ./dist",
     "build:copyscss": "copyfiles -f ./tmp/*.scss ./dist/",
     "prebuild": "npm-run-all clean:tmp clean:dist build:convert prettier",

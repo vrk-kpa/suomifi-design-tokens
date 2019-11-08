@@ -219,7 +219,7 @@ function generateTSInterfaces(tokensByCategory, staticInterfaces) {
           resultArray.push(
             ...generateTSInterfaceCategory(
               value.tokens,
-              'ColorDesingTokens',
+              'ColorDesignTokens',
               'ColorToken',
             ),
           );
@@ -229,7 +229,7 @@ function generateTSInterfaces(tokensByCategory, staticInterfaces) {
           resultArray.push(
             ...generateTSInterfaceCategory(
               value.tokens,
-              'TypograhpyDesingTokens',
+              'TypographyDesignTokens',
               'TypographyToken',
             ),
           );
@@ -239,7 +239,7 @@ function generateTSInterfaces(tokensByCategory, staticInterfaces) {
           resultArray.push(
             ...generateTSInterfaceCategory(
               value.tokens,
-              'SpacingDesingTokens',
+              'SpacingDesignTokens',
               'ValueUnit',
             ),
           );

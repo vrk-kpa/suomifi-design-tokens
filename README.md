@@ -127,7 +127,7 @@ const brandBaseHsl = tokens.colors.brandBase.hsl;
 TypeScript example with typings:
 
 ```ts
-import { ColorToken } from 'suomifi-desing-tokens';
+import { ColorToken } from 'suomifi-design-tokens';
 
 const brandBase: ColorToken = tokens.colors.brandBase;
 const brandBaseHsl: string = brandBase.hsl;
@@ -135,7 +135,7 @@ const brandBaseHsl: string = brandBase.hsl;
 
 ### 🖋 Typography
 
-Typography tokens are available with **typograhpy** property. Typography is provided with fontFamily, fontSize, lineHeight and fontWeight.
+Typography tokens are available with **typography** property. Typography is provided with fontFamily, fontSize, lineHeight and fontWeight.
 
 Example from **tokens object**:
 
@@ -156,7 +156,7 @@ exports.tokens = {
 JavaScript example:
 
 ```js
-const heading1 = tokens.typograhpy.heading1;
+const heading1 = tokens.typography.heading1;
 const heading1FontSize =
   heading1.fontSize.value + heading1.fontSize.unit;
 const heading1FontFamily = heading1.fontFamily;
@@ -165,7 +165,7 @@ const heading1FontFamily = heading1.fontFamily;
 TypeScript example with typings:
 
 ```ts
-import { TypographyToken } from 'suomifi-desing-tokens';
+import { TypographyToken } from 'suomifi-design-tokens';
 
 const heading1: TypographyToken = tokens.typography.heading1;
 const heading1FontSize: string =
@@ -197,7 +197,7 @@ const spacingLWithUnit = spacingL.value + spacingL.unit;
 TypeScript example with typings:
 
 ```ts
-import { ValueUnit } from 'suomifi-desing-tokens';
+import { ValueUnit } from 'suomifi-design-tokens';
 
 const spacingL: ValueUnit = tokens.spacing.l;
 const spacingLWithUnit: string = spacingL.value + spacingL.unit;

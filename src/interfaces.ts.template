@@ -1,7 +1,7 @@
 export interface DesignTokens {
-  colors: ColorDesingTokens;
-  typography: TypograhpyDesingTokens;
-  spacing: SpacingDesingTokens;
+  colors: ColorDesignTokens;
+  typography: TypographyDesignTokens;
+  spacing: SpacingDesignTokens;
 }
 
 export interface ColorToken {
