@@ -10,6 +10,7 @@ require.extensions['.template'] = function(module, filename) {
   module.exports = fs.readFileSync(filename, 'utf8');
 };
 const scssPrefix = 'fi';
+const rawTokensInterfaceName = 'RawDesignTokens'; // interface name for object format tokens matching the template
 const tokensInterfaceName = 'DesignTokens'; // interface name matching the template
 const staticInterfaces = require('./interfaces.ts.template');
 const outFileName = 'tokens';
@@ -32,6 +33,7 @@ function main() {
         program.outdir,
         outFileTSName,
         tokensInterfaceName,
+        rawTokensInterfaceName,
       );
     }
   } catch (err) {
@@ -133,13 +135,21 @@ function exportToTS(
   outDir,
   outFileName,
   tokensInterfaceName,
+  rawTokensInterfaceName,
 ) {
+  /** Export tokens in TS format for css-in-js / tokens as strings */
   const tSExport = formatToTS(tokensByCategory, tokensInterfaceName);
+  /** Export tokens in TS format without string conversion / tokens are objects with value and unit etc. */
+  const rawTSExport = formatToRawTS(tokensByCategory, rawTokensInterfaceName);
   const typesExport = generateTSInterfaces(tokensByCategory, staticInterfaces);
-  exportFile(`${outDir}`, `${outFileName}.ts`, typesExport + tSExport);
+  exportFile(
+    `${outDir}`,
+    `${outFileName}.ts`,
+    typesExport + '\n\n' + rawTSExport + '\n\n' + tSExport,
+  );
 }
 
-function formatToTS(tokensByCategory, tokensInterfaceName) {
+function formatToRawTS(tokensByCategory, tokensInterfaceName) {
   const tSExport = Object.assign(
     {},
     ...tokensByCategory.reduce((resultArray, category) => {
@@ -161,7 +171,7 @@ function formatToTS(tokensByCategory, tokensInterfaceName) {
       return resultArray;
     }, []),
   );
-  return `export const tokens: ${tokensInterfaceName} = ${JSON.stringify(
+  return `export const rawSuomifiDesignTokens: ${tokensInterfaceName} = ${JSON.stringify(
     tSExport,
   )}`;
 }
@@ -211,6 +221,86 @@ function formatSpacingToTS(tokens) {
   );
 }
 
+function formatToTS(tokensByCategory, tokensInterfaceName) {
+  const tSExport = Object.assign(
+    {},
+    ...tokensByCategory.reduce((resultArray, category) => {
+      switch (category.category) {
+        case 'colors':
+          resultArray.push({
+            colors: formatValueUnitTokensToString(category.tokens),
+          });
+          break;
+        case 'typography':
+          resultArray.push({
+            typography: formatTypographyToString(category.tokens),
+          });
+          break;
+        case 'spacing':
+          resultArray.push({
+            spacing: formatValueUnitTokensToString(category.tokens),
+          });
+          break;
+        default:
+          console.warn('Unrecognized category type');
+      }
+      return resultArray;
+    }, []),
+  );
+  return `export const suomifiDesignTokens: ${tokensInterfaceName} = ${JSON.stringify(
+    tSExport,
+  )}`;
+}
+
+function formatValueUnitTokensToString(tokens) {
+  return Object.assign(
+    {},
+    ...tokens.map(token => {
+      const obj = {
+        [token.name]:
+          (token.type === 'hsl'
+            ? `hsl(${token.value.h}, ${token.value.s}%, ${token.value.l}%)`
+            : token.value.value) + (!!token.value.unit ? token.value.unit : ''),
+      };
+      return obj;
+    }),
+  );
+}
+
+function formatColorsToTS(tokens) {
+  return Object.assign(
+    {},
+    ...tokens.map(token => {
+      return {
+        [token.name]: {
+          hsl: `hsl(${token.value.h}, ${token.value.s}%, ${token.value.l}%)`,
+          h: token.value.h,
+          s: token.value.s,
+          l: token.value.l,
+        },
+      };
+    }),
+  );
+}
+
+function formatTypographyToString(tokens) {
+  return Object.assign(
+    {},
+    ...tokens.map(token => {
+      const fontFamily = `${token.value.fontFamily
+        .map(font => `'${font}', `)
+        .join('')}${token.value.genericFontFamily}`;
+      const fontSize = `${token.value.fontSize.value +
+        (!!token.value.fontSize.unit ? token.value.fontSize.unit : '')}`;
+      const lineHeight = `${token.value.lineHeight.value +
+        (!!token.value.lineHeight.unit ? token.value.lineHeight.unit : '')}`;
+      return {
+        [token.name]: `font-family: ${fontFamily}; font-size: ${fontSize}; line-height: ${lineHeight}; fontWeight: ${token.value.fontWeight};`,
+      };
+    }),
+  );
+}
+
 function generateTSInterfaces(tokensByCategory, staticInterfaces) {
   const interfaceExport = Object.entries(tokensByCategory).reduce(
     (resultArray, [key, value]) => {
@@ -219,8 +309,12 @@ function generateTSInterfaces(tokensByCategory, staticInterfaces) {
           resultArray.push(
             ...generateTSInterfaceCategory(
               value.tokens,
+              'RawColorDesignTokens',
+              'RawColorToken',
+            ),
+            ...generateTSStringInterfaceCatergory(
+              value.tokens,
               'ColorDesignTokens',
-              'ColorToken',
             ),
           );
           return resultArray;
@@ -229,8 +323,12 @@ function generateTSInterfaces(tokensByCategory, staticInterfaces) {
           resultArray.push(
             ...generateTSInterfaceCategory(
               value.tokens,
+              'RawTypographyDesignTokens',
+              'RawTypographyToken',
+            ),
+            ...generateTSStringInterfaceCatergory(
+              value.tokens,
               'TypographyDesignTokens',
-              'TypographyToken',
             ),
           );
           return resultArray;
@@ -239,8 +337,12 @@ function generateTSInterfaces(tokensByCategory, staticInterfaces) {
           resultArray.push(
             ...generateTSInterfaceCategory(
               value.tokens,
-              'SpacingDesignTokens',
+              'RawSpacingDesignTokens',
               'ValueUnit',
+            ),
+            ...generateTSStringInterfaceCatergory(
+              value.tokens,
+              'SpacingDesignTokens',
             ),
           );
           return resultArray;
@@ -272,6 +374,14 @@ function generateTSInterfaceProperties(tokens, interfaceName) {
   return tokens.map(token => {
     return `${token.name}: ${interfaceName};`;
   });
+}
+
+function generateTSStringInterfaceCatergory(tokens, categoryInterfaceName) {
+  return [
+    `export interface ${categoryInterfaceName} {`,
+    ...tokens.map(token => `${token.name}: string;`),
+    '}',
+  ];
 }
 
 function exportFile(outDir, fileName, data) {

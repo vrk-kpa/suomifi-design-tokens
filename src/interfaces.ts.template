@@ -4,14 +4,20 @@ export interface DesignTokens {
   spacing: SpacingDesignTokens;
 }
 
-export interface ColorToken {
+export interface RawDesignTokens {
+  colors: RawColorDesignTokens;
+  typography: RawTypographyDesignTokens;
+  spacing: RawSpacingDesignTokens;
+}
+
+export interface RawColorToken {
   hsl: string;
   h: number;
   s: number;
   l: number;
 }
 
-export interface TypographyToken {
+export interface RawTypographyToken {
   fontFamily: string;
   fontSize: ValueUnit;
   lineHeight: ValueUnit;
@@ -22,4 +28,3 @@ export interface ValueUnit {
   value: number | string;
   unit: string | null;
 }
-
