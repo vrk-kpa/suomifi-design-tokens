@@ -1,19 +1,16 @@
-const fs = require('fs');
-const tokensInterfaceName = 'DesignTokens'; // interface name matching the template
-require.extensions['.template'] = function(module, filename) {
-  module.exports = fs.readFileSync(filename, 'utf8');
-};
-const staticInterfaces = require('./interfaces.ts.template');
-
-function convertTokensToCssInJS(tokensByCategory) {
+module.exports = function convertTokensToTS(
+  tokensByCategory,
+  tokensInterfaceName,
+  exportObjectName,
+) {
   return (
-    formatToTS(tokensByCategory, tokensInterfaceName) +
+    formatToTS(tokensByCategory, tokensInterfaceName, exportObjectName) +
     '\n\n' +
-    generateTSInterfaces(tokensByCategory, staticInterfaces)
+    generateTSInterfaces(tokensByCategory)
   );
-}
+};
 
-function formatToTS(tokensByCategory, tokensInterfaceName) {
+function formatToTS(tokensByCategory, tokensInterfaceName, exportObjectName) {
   const tSExport = Object.assign(
     {},
     ...tokensByCategory.reduce((resultArray, category) => {
@@ -41,7 +38,8 @@ function formatToTS(tokensByCategory, tokensInterfaceName) {
   );
   return `export const suomifiDesignTokens: ${tokensInterfaceName} = ${JSON.stringify(
     tSExport,
-  )}`;
+  ).slice(0, -1)},
+    values: ${exportObjectName}}`;
 }
 
 function formatValueUnitTokensToString(tokens) {
@@ -71,13 +69,13 @@ function formatTypographyToString(tokens) {
       const lineHeight = `${token.value.lineHeight.value +
         (!!token.value.lineHeight.unit ? token.value.lineHeight.unit : '')}`;
       return {
-        [token.name]: `font-family: ${fontFamily}; font-size: ${fontSize}; line-height: ${lineHeight}; fontWeight: ${token.value.fontWeight};`,
+        [token.name]: `font-family: ${fontFamily}; font-size: ${fontSize}; line-height: ${lineHeight}; font-weight: ${token.value.fontWeight};`,
       };
     }),
   );
 }
 
-function generateTSInterfaces(tokensByCategory, staticInterfaces) {
+function generateTSInterfaces(tokensByCategory) {
   const interfaceExport = Object.entries(tokensByCategory).reduce(
     (resultArray, [key, value]) => {
       switch (value.category) {
@@ -116,7 +114,7 @@ function generateTSInterfaces(tokensByCategory, staticInterfaces) {
     },
     [],
   );
-  return staticInterfaces + interfaceExport.join('');
+  return interfaceExport.join('');
 }
 
 function generateTSStringInterfaceCatergory(tokens, categoryInterfaceName) {
@@ -126,6 +124,3 @@ function generateTSStringInterfaceCatergory(tokens, categoryInterfaceName) {
     '}',
   ];
 }
-
-module.exports.format = 'ts';
-module.exports.convert = convertTokensToCssInJS;

@@ -1,17 +1,24 @@
+export interface DesignTokens {
+  colors: ColorDesignTokens;
+  typography: TypographyDesignTokens;
+  spacing: SpacingDesignTokens;
+  values: RawDesignTokens
+}
+
 export interface RawDesignTokens {
   colors: RawColorDesignTokens;
   typography: RawTypographyDesignTokens;
   spacing: RawSpacingDesignTokens;
 }
 
-export interface RawColorToken {
+export interface ColorToken {
   hsl: string;
   h: number;
   s: number;
   l: number;
 }
 
-export interface RawTypographyToken {
+export interface TypographyToken {
   fontFamily: string;
   fontSize: ValueUnit;
   lineHeight: ValueUnit;

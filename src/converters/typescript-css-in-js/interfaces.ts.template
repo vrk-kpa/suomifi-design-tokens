@@ -1,5 +1,0 @@
-export interface DesignTokens {
-  colors: ColorDesignTokens;
-  typography: TypographyDesignTokens;
-  spacing: SpacingDesignTokens;
-}
