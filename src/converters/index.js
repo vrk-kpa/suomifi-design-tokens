@@ -1,5 +1,5 @@
 module.exports.ts = {
-  converters: [require('./typescript-raw'), require('./typescript-css-in-js')],
+  converters: [require('./typescript')],
   name: 'TypeScript',
   outFileName: 'index',
 };

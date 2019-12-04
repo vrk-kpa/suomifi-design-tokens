@@ -1,19 +1,20 @@
-const fs = require('fs');
-const rawTokensInterfaceName = 'RawDesignTokens'; // interface name for object format tokens matching the template
-require.extensions['.template'] = function(module, filename) {
-  module.exports = fs.readFileSync(filename, 'utf8');
-};
-const staticInterfaces = require('./interfaces.ts.template');
-
-function convertTokensToTS(tokensByCategory) {
+module.exports = function convertTokensToTS(
+  tokensByCategory,
+  tokensInterfaceName,
+  exportObjectName,
+) {
   return (
-    formatToRawTS(tokensByCategory, rawTokensInterfaceName) +
+    formatToRawTS(tokensByCategory, tokensInterfaceName, exportObjectName) +
     '\n\n' +
-    generateTSInterfaces(tokensByCategory, staticInterfaces)
+    generateTSInterfaces(tokensByCategory)
   );
-}
+};
 
-function formatToRawTS(tokensByCategory, tokensInterfaceName) {
+function formatToRawTS(
+  tokensByCategory,
+  tokensInterfaceName,
+  exportObjectName,
+) {
   const tSExport = Object.assign(
     {},
     ...tokensByCategory.reduce((resultArray, category) => {
@@ -35,7 +36,7 @@ function formatToRawTS(tokensByCategory, tokensInterfaceName) {
       return resultArray;
     }, []),
   );
-  return `export const rawSuomifiDesignTokens: ${tokensInterfaceName} = ${JSON.stringify(
+  return `const ${exportObjectName}: ${tokensInterfaceName} = ${JSON.stringify(
     tSExport,
   )}`;
 }
@@ -101,7 +102,7 @@ function formatColorsToTS(tokens) {
   );
 }
 
-function generateTSInterfaces(tokensByCategory, staticInterfaces) {
+function generateTSInterfaces(tokensByCategory) {
   const interfaceExport = Object.entries(tokensByCategory).reduce(
     (resultArray, [key, value]) => {
       switch (value.category) {
@@ -110,7 +111,7 @@ function generateTSInterfaces(tokensByCategory, staticInterfaces) {
             ...generateTSInterfaceCategory(
               value.tokens,
               'RawColorDesignTokens',
-              'RawColorToken',
+              'ColorToken',
             ),
           );
           return resultArray;
@@ -120,7 +121,7 @@ function generateTSInterfaces(tokensByCategory, staticInterfaces) {
             ...generateTSInterfaceCategory(
               value.tokens,
               'RawTypographyDesignTokens',
-              'RawTypographyToken',
+              'TypographyToken',
             ),
           );
           return resultArray;
@@ -143,7 +144,7 @@ function generateTSInterfaces(tokensByCategory, staticInterfaces) {
     },
     [],
   );
-  return staticInterfaces + interfaceExport.join('');
+  return interfaceExport.join('');
 }
 
 function generateTSInterfaceCategory(
@@ -163,6 +164,3 @@ function generateTSInterfaceProperties(tokens, interfaceName) {
     return `${token.name}: ${interfaceName};`;
   });
 }
-
-module.exports.format = 'ts';
-module.exports.convert = convertTokensToTS;
