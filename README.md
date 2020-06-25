@@ -1,6 +1,6 @@
 # Suomifi Design System Tokens
 
-The Design System Tokens repository contains color, typography and spacing definitions as tokens following the Suomi.fi-brand.
+The Design System Tokens repository contains color, typography and spacing definitions as tokens following the Suomi.fi-brand. The repository uses semantic versioning (https://semver.org/).
 
 ## ✨ Features
 
