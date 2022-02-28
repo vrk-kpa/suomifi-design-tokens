@@ -2,7 +2,7 @@
 'use strict';
 const path = require('path');
 const fs = require('fs');
-const program = require('commander');
+const { Command, Option } = require('commander');
 
 const tokensData = require('./tokens.json');
 const tokensParser = require('./tokens-parser');
@@ -10,14 +10,16 @@ const converters = require('./converters');
 
 function main() {
   try {
+    const program = new Command();
     program
       .option('--outdir <outdir>', 'output directory')
       .option('--format <format>', 'format to output') // supports only scss and ts
       .parse(process.argv);
+    const opts = program.opts();
 
     const tokensByCategory = tokensParser(tokensData, tokensData.tokens);
 
-    program.format.split(' ').forEach(format => {
+    opts.format.split(' ').forEach(format => {
       if (converters[format] == undefined) {
         throw `No converter found for ${format}`;
       } else {
@@ -26,7 +28,7 @@ function main() {
           tokensByCategory,
         );
         exportFile(
-          `${program.outdir}`,
+          `${opts.outdir}`,
           `${converters[format].outFileName}.${format}`,
           exportData,
         );
@@ -63,3 +65,10 @@ function exportFile(outDir, fileName, data) {
 }
 
 main();
+
+
+
+
+
+
+
