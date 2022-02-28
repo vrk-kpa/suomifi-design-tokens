@@ -44,7 +44,7 @@ function formatToRawTS(
 function formatColorsToTS(tokens) {
   return Object.assign(
     {},
-    ...tokens.map(token => {
+    ...tokens.map((token) => {
       return {
         [token.name]: {
           hsl: `hsl(${token.value.h}, ${token.value.s}%, ${token.value.l}%)`,
@@ -60,11 +60,11 @@ function formatColorsToTS(tokens) {
 function formatTypographyToTS(tokens) {
   return Object.assign(
     {},
-    ...tokens.map(token => {
+    ...tokens.map((token) => {
       return {
         [token.name]: {
           fontFamily: `${token.value.fontFamily
-            .map(font => `'${font}', `)
+            .map((font) => `'${font}', `)
             .join('')}${token.value.genericFontFamily}`,
           fontSize: token.value.fontSize,
           lineHeight: token.value.lineHeight,
@@ -78,7 +78,7 @@ function formatTypographyToTS(tokens) {
 function formatSpacingToTS(tokens) {
   return Object.assign(
     {},
-    ...tokens.map(token => {
+    ...tokens.map((token) => {
       return {
         [token.name]: token.value,
       };
@@ -89,7 +89,7 @@ function formatSpacingToTS(tokens) {
 function formatColorsToTS(tokens) {
   return Object.assign(
     {},
-    ...tokens.map(token => {
+    ...tokens.map((token) => {
       return {
         [token.name]: {
           hsl: `hsl(${token.value.h}, ${token.value.s}%, ${token.value.l}%)`,
@@ -160,7 +160,7 @@ function generateTSInterfaceCategory(
 }
 
 function generateTSInterfaceProperties(tokens, interfaceName) {
-  return tokens.map(token => {
+  return tokens.map((token) => {
     return `${token.name}: ${interfaceName};`;
   });
 }

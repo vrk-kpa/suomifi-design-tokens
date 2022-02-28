@@ -19,7 +19,7 @@ function main() {
 
     const tokensByCategory = tokensParser(tokensData, tokensData.tokens);
 
-    opts.format.split(' ').forEach(format => {
+    opts.format.split(' ').forEach((format) => {
       if (converters[format] == undefined) {
         throw `No converter found for ${format}`;
       } else {
@@ -41,7 +41,7 @@ function main() {
 
 function getFormattedTokens(formatters, tokensByCategory) {
   let formattedTokens = '';
-  formatters.forEach(formatter => {
+  formatters.forEach((formatter) => {
     formattedTokens += formatter.convert(tokensByCategory);
   });
   return formattedTokens;
@@ -53,7 +53,7 @@ function exportFile(outDir, fileName, data) {
     if (!fs.existsSync(dirname)) {
       fs.mkdirSync(dirname);
     }
-    fs.writeFile(path.join(dirname, fileName), data, err => {
+    fs.writeFile(path.join(dirname, fileName), data, (err) => {
       if (err) {
         throw err;
       }
@@ -65,10 +65,3 @@ function exportFile(outDir, fileName, data) {
 }
 
 main();
-
-
-
-
-
-
-

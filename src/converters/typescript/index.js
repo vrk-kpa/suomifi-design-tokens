@@ -2,7 +2,7 @@ const fs = require('fs');
 const tokensInterfaceName = 'DesignTokens'; // interface name matching the template
 const rawTokensInterfaceName = 'RawDesignTokens'; // interface name for object format tokens matching the template
 const exportObjectName = 'suomifiDesignTokenObjects';
-require.extensions['.template'] = function(module, filename) {
+require.extensions['.template'] = function (module, filename) {
   module.exports = fs.readFileSync(filename, 'utf8');
 };
 const staticInterfaces = require('./interfaces.ts.template');

@@ -26,7 +26,7 @@ function formatToScss(tokensByCategory, scssPrefix) {
 }
 
 function formatColorsToScss(tokens, scssPrefix) {
-  return tokens.map(token => {
+  return tokens.map((token) => {
     return `$${scssPrefix}-${token.prefix}-${convertCamelCaseToKebabCase(
       token.name,
     )}: hsl(${token.value.h}, ${token.value.s}%, ${token.value.l}%);`;
@@ -34,7 +34,7 @@ function formatColorsToScss(tokens, scssPrefix) {
 }
 
 function formatTypographyToScss(tokens, scssPrefix) {
-  return tokens.map(token => {
+  return tokens.map((token) => {
     return `@mixin ${scssPrefix}-${token.prefix}-${convertCamelCaseToKebabCase(
       token.name,
     )} {
@@ -53,7 +53,7 @@ function formatTypographyToScss(tokens, scssPrefix) {
 }
 
 function formatSpacingToScss(tokens, scssPrefix) {
-  return tokens.map(token => {
+  return tokens.map((token) => {
     return `$${scssPrefix}-${token.prefix}-${convertCamelCaseToKebabCase(
       token.name,
     )}: ${token.value.value + token.value.unit};`;

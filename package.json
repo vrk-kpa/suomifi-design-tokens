@@ -12,7 +12,7 @@
   "author": "Joonas Kallunki & Aappo Ålander",
   "license": "MIT",
   "scripts": {
-    "prettier": "prettier --write \"tmp/**/*.scss\"",
+    "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "clean:tmp": "rimraf tmp",
     "clean:dist": "rimraf dist",
     "build:convert": "node ./src/convert.js --format \"ts scss\" --outdir ./tmp",

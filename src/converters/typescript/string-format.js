@@ -45,7 +45,7 @@ function formatToTS(tokensByCategory, tokensInterfaceName, exportObjectName) {
 function formatValueUnitTokensToString(tokens) {
   return Object.assign(
     {},
-    ...tokens.map(token => {
+    ...tokens.map((token) => {
       const obj = {
         [token.name]:
           (token.type === 'hsl'
@@ -60,14 +60,18 @@ function formatValueUnitTokensToString(tokens) {
 function formatTypographyToString(tokens) {
   return Object.assign(
     {},
-    ...tokens.map(token => {
+    ...tokens.map((token) => {
       const fontFamily = `${token.value.fontFamily
-        .map(font => `'${font}', `)
+        .map((font) => `'${font}', `)
         .join('')}${token.value.genericFontFamily}`;
-      const fontSize = `${token.value.fontSize.value +
-        (!!token.value.fontSize.unit ? token.value.fontSize.unit : '')}`;
-      const lineHeight = `${token.value.lineHeight.value +
-        (!!token.value.lineHeight.unit ? token.value.lineHeight.unit : '')}`;
+      const fontSize = `${
+        token.value.fontSize.value +
+        (!!token.value.fontSize.unit ? token.value.fontSize.unit : '')
+      }`;
+      const lineHeight = `${
+        token.value.lineHeight.value +
+        (!!token.value.lineHeight.unit ? token.value.lineHeight.unit : '')
+      }`;
       return {
         [token.name]: `font-family: ${fontFamily}; font-size: ${fontSize}; line-height: ${lineHeight}; font-weight: ${token.value.fontWeight};`,
       };
@@ -120,7 +124,7 @@ function generateTSInterfaces(tokensByCategory) {
 function generateTSStringInterfaceCatergory(tokens, categoryInterfaceName) {
   return [
     `export interface ${categoryInterfaceName} {`,
-    ...tokens.map(token => `${token.name}: string;`),
+    ...tokens.map((token) => `${token.name}: string;`),
     '}',
   ];
 }
