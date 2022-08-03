@@ -1,14 +1,24 @@
 export interface DesignTokens {
   colors: ColorDesignTokens;
   typography: TypographyDesignTokens;
+  radiuses: RadiusDesignTokens;
   spacing: SpacingDesignTokens;
-  values: RawDesignTokens
+  transitions: TransitionDesignTokens;
+  gradients: GradientDesignTokens;
+  shadows: ShadowDesignTokens;
+  focuses: FocusDesignTokens;
+  values: RawDesignTokens;
 }
 
 export interface RawDesignTokens {
   colors: RawColorDesignTokens;
   typography: RawTypographyDesignTokens;
   spacing: RawSpacingDesignTokens;
+  radiuses: RawRadiusDesignTokens;
+  transitions: RawTransitionDesignTokens;
+  gradients: RawGradientDesignTokens;
+  shadows: RawShadowDesignTokens;
+  focuses: RawFocusDesignTokens;
 }
 
 export interface ColorToken {
@@ -25,7 +35,26 @@ export interface TypographyToken {
   fontWeight: number;
 }
 
+export interface FocusToken {
+  content?: string;
+  position?: string;
+  pointerEvents?: string;
+  top?: ValueUnit;
+  right?: ValueUnit;
+  bottom?: ValueUnit
+  left?: ValueUnit,
+  borderRadius?: string;
+  backgroundColor?: string;
+  border?: string;
+  boxSizing?: string;
+  boxShadow?: string;
+  zIndex?: string;
+  outline?: string;
+  wrapper?: string,
+  after?: string,
+}
+
 export interface ValueUnit {
   value: number | string;
-  unit: string | null;
+  unit?: string | null;
 }

@@ -6,7 +6,8 @@ module.exports = function convertTokensToTS(
   return (
     formatToTS(tokensByCategory, tokensInterfaceName, exportObjectName) +
     '\n\n' +
-    generateTSInterfaces(tokensByCategory)
+    generateTSInterfaces(tokensByCategory) +
+    '\n\n'
   );
 };
 
@@ -30,8 +31,35 @@ function formatToTS(tokensByCategory, tokensInterfaceName, exportObjectName) {
             spacing: formatValueUnitTokensToString(category.tokens),
           });
           break;
+        case 'radiuses':
+          resultArray.push({
+            radiuses: formatValueUnitTokensToString(category.tokens),
+          });
+          break;
+        case 'transitions':
+          resultArray.push({
+            transitions: formatValueUnitTokensToString(category.tokens),
+          });
+          break;
+        case 'gradients':
+          resultArray.push({
+            gradients: formatValueUnitTokensToString(category.tokens),
+          });
+          break;
+        case 'shadows':
+          resultArray.push({
+            shadows: formatValueUnitTokensToString(category.tokens),
+          });
+          break;
+        case 'focuses':
+          resultArray.push({
+            focuses: formatFocusTokensToString(category.tokens),
+          });
+          break;
         default:
-          console.warn('Unrecognized category type');
+          console.warn(
+            `String formatting: Unrecognized category type ${category.category}`,
+          );
       }
       return resultArray;
     }, []),
@@ -79,6 +107,79 @@ function formatTypographyToString(tokens) {
   );
 }
 
+function formatFocusTokensToString(tokens) {
+  return Object.assign(
+    {},
+    ...tokens.map((token) => {
+      let tokenString = '';
+
+      if (token.wrapper) {
+        tokenString += `${token.wrapper} {`;
+      }
+
+      if (token.value.content) {
+        tokenString += `content: ${token.value.content};`;
+      }
+      if (token.value.position) {
+        tokenString += `position: ${token.value.position};`;
+      }
+      if (token.value.pointerEvents) {
+        tokenString += `pointer-events: ${token.value.pointerEvents};`;
+      }
+      if (token.value.top) {
+        tokenString += `top: ${token.value.top.value}${
+          token.value.top.unit !== null ? token.value.top.unit : ''
+        };`;
+      }
+      if (token.value.right) {
+        tokenString += `right: ${token.value.right.value}${
+          token.value.right.unit !== null ? token.value.right.unit : ''
+        };`;
+      }
+      if (token.value.bottom) {
+        tokenString += `bottom: ${token.value.bottom.value}${
+          token.value.bottom.unit !== null ? token.value.bottom.unit : ''
+        };`;
+      }
+      if (token.value.left) {
+        tokenString += `left: ${token.value.left.value}${
+          token.value.left.unit !== null ? token.value.left.unit : ''
+        };`;
+      }
+      if (token.value.borderRadius) {
+        tokenString += `border-radius: ${token.value.borderRadius};`;
+      }
+      if (token.value.backgroundColor) {
+        tokenString += `background-color: ${token.value.backgroundColor};`;
+      }
+      if (token.value.border) {
+        tokenString += `border: ${token.value.border};`;
+      }
+      if (token.value.boxSizing) {
+        tokenString += `box-sizing: ${token.value.boxSizing};`;
+      }
+      if (token.value.boxShadow) {
+        tokenString += `box-shadow: ${token.value.boxShadow};`;
+      }
+      if (token.value.zIndex) {
+        tokenString += `z-index: ${token.value.zIndex};`;
+      }
+      if (token.value.outline) {
+        tokenString += `outline: ${token.value.outline};`;
+      }
+      if (token.value.after) {
+        tokenString += `&:after { ${token.value.after}}`;
+      }
+
+      if (token.wrapper) {
+        tokenString += '}';
+      }
+
+      return { [token.name]: tokenString };
+    }),
+  );
+}
+
 function generateTSInterfaces(tokensByCategory) {
   const interfaceExport = Object.entries(tokensByCategory).reduce(
     (resultArray, [key, value]) => {
@@ -110,8 +211,55 @@ function generateTSInterfaces(tokensByCategory) {
           );
           return resultArray;
         }
+        case 'radiuses': {
+          resultArray.push(
+            ...generateTSStringInterfaceCatergory(
+              value.tokens,
+              'RadiusDesignTokens',
+            ),
+          );
+          return resultArray;
+        }
+        case 'transitions': {
+          resultArray.push(
+            ...generateTSStringInterfaceCatergory(
+              value.tokens,
+              'TransitionDesignTokens',
+            ),
+          );
+          return resultArray;
+        }
+        case 'gradients': {
+          resultArray.push(
+            ...generateTSStringInterfaceCatergory(
+              value.tokens,
+              'GradientDesignTokens',
+            ),
+          );
+          return resultArray;
+        }
+        case 'shadows': {
+          resultArray.push(
+            ...generateTSStringInterfaceCatergory(
+              value.tokens,
+              'ShadowDesignTokens',
+            ),
+          );
+          return resultArray;
+        }
+        case 'focuses': {
+          resultArray.push(
+            ...generateTSStringInterfaceCatergory(
+              value.tokens,
+              'FocusDesignTokens',
+            ),
+          );
+          return resultArray;
+        }
         default: {
-          console.warn('Unrecognized category type');
+          console.warn(
+            `String formatting TS interface: Unrecognized category type ${value.category}`,
+          );
           return resultArray;
         }
       }
@@ -125,6 +273,6 @@ function generateTSStringInterfaceCatergory(tokens, categoryInterfaceName) {
   return [
     `export interface ${categoryInterfaceName} {`,
     ...tokens.map((token) => `${token.name}: string;`),
-    '}',
+    '} \n',
   ];
 }

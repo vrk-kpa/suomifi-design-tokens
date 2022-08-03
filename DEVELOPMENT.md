@@ -2,17 +2,27 @@
 
 ## ℹ Token Data
 
-The design system tokens are stored in the tokens.json file. The file consists of token categories and tokens.
+The design system tokens are stored in the tokens.json and derived-tokens.json files. The files consist of token categories and tokens.
 
 ### 📖 Categories
 
-Design tokens are divided into categories based on token type. Categories include a token prefix for the tokens in the category and description information. All tokens belong to exactly one category.
+Basic tokens (in the tokens.json file) are atomic values, for example color values. The derived tokens (derived-tokens.json) on the other hand are design elements which are derived from the basic atomic tokens, for example color gradients.
 
-Current categories are:
+The tokens are further divided into categories based on token type. Categories include a token prefix for the tokens in the category and description information. All tokens belong to exactly one category.
+
+Current basic token categories are:
 
 - Colors
 - Typography
 - Spacing
+- Radiuses
+- Transitions
+
+And the derived token categories are:
+
+- Gradients
+- Shadows
+- Focuses
 
 ### 📃 Tokens
 
@@ -27,6 +37,41 @@ Currently token values are defined by type in the following way:
   - **fontSize** and **lineHeight**: _object_ with keys for value and unit where **value** is an _integer_ or _string_ and **unit** either a _string_ or _null_
   - **fontWeight**: _integer_
 - **size**: _object_ with keys for value and unit where **value** is an _integer_ and **unit** is either a _string_ or _null_.
+- **string**: _object_ with a key called value which has any _string_ value
+
+- **derived-string**: _object_ with a key called value which has a _string_ value. The value might contain variables, which correspond to basic tokens. In terms of syntax, the variables are marked inside curly braces {} and contain two parts separated by a period: category and token name. In addition, the variable might have a modifier which is separated by a comma.
+
+Example of derived-string type:
+
+```json
+"whiteBaseNegative": {
+  "category": "gradients",
+  "version": "1.0",
+  "value": {
+    "value": "linear-gradient(-180deg, {colors.whiteBase, alpha-0.1} 0%, {colors.whiteBase, alpha-0} 100%)"
+  },
+  "type": "derived-string",
+  "comments": []
+},
+```
+
+- **derived-object**: Similar as above but with more than one value
+
+Example:
+
+```json
+"boxShadowFocus": {
+  "category": "focuses",
+  "version": "1.0",
+  "value": {
+    "outline": "0",
+    "borderRadius": "{radiuses.focus}",
+    "boxShadow": "0 0 0 2px {colors.accentSecondary}"
+  },
+  "type": "derived-object",
+  "comments": []
+},
+```
 
 ## ⌨️ Development
 
@@ -43,7 +88,7 @@ yarn
 ### 🛠Adding and modifying tokens and categories
 
 1. Create a new branch for your changes, nothing will be merged directly to master.
-2. Modify the **tokens.json** file following the format described above
+2. Modify the **tokens.json** or **derived-tokens.json** file following the format described above. Note that if you are making changes to derived tokens and are implementing variable types which are new, make sure the converter logic supports them. You probably need to write new code.
 3. Run
 
 ```bash
