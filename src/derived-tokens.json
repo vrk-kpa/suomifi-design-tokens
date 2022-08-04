@@ -1,0 +1,208 @@
+{
+  "tokens": {
+    "highlightBaseToHighlightDark1": {
+      "category": "gradients",
+      "version": "1.0",
+      "value": {
+        "value": "linear-gradient(0deg, {colors.highlightBase} 0%, {colors.highlightDark1} 100%)"
+      },
+      "type": "derived-string",
+      "comments": []
+    },
+    "highlightLight1ToHighlightBase": {
+      "category": "gradients",
+      "version": "1.0",
+      "value": {
+        "value": "linear-gradient(0deg, {colors.highlightBase} 0%, {colors.highlightLight1} 100%)"
+      },
+      "type": "derived-string",
+      "comments": []
+    },
+    "depthLight1ToDepthBase": {
+      "category": "gradients",
+      "version": "1.0",
+      "value": {
+        "value": "linear-gradient(0deg, {colors.depthBase} 0%, {colors.depthLight1} 100%)"
+      },
+      "type": "derived-string",
+      "comments": []
+    },
+    "whiteBaseNegative": {
+      "category": "gradients",
+      "version": "1.0",
+      "value": {
+        "value": "linear-gradient(-180deg, {colors.whiteBase, alpha-0.1} 0%, {colors.whiteBase, alpha-0} 100%)"
+      },
+      "type": "derived-string",
+      "comments": []
+    },
+    "whiteBaseToDepthLight2": {
+      "category": "gradients",
+      "version": "1.0",
+      "value": {
+        "value": "linear-gradient(-180deg, {colors.depthLight2} 0%, {colors.whiteBase, alpha-0} 100%)"
+      },
+      "type": "derived-string",
+      "comments": []
+    },
+    "whiteBaseToDepthLight1": {
+      "category": "gradients",
+      "version": "1.0",
+      "value": {
+        "value": "linear-gradient(-180deg, {colors.depthLight1} 0%, {colors.whiteBase, alpha-0} 100%)"
+      },
+      "type": "derived-string",
+      "comments": []
+    },
+    "highlightLight3ToHighlightLight2": {
+      "category": "gradients",
+      "version": "1.0",
+      "value": {
+        "value": "linear-gradient(0deg, {colors.highlightLight2}, {colors.highlightLight3})"
+      },
+      "type": "derived-string",
+      "comments": []
+    },
+    "depthLight3ToDepthLight2": {
+      "category": "gradients",
+      "version": "1.0",
+      "value": {
+        "value": "linear-gradient(0deg, {colors.depthLight2}, {colors.depthLight3})"
+      },
+      "type": "derived-string",
+      "comments": []
+    },
+    "depthSecondaryToDepthSecondaryDark1": {
+      "category": "gradients",
+      "version": "1.0",
+      "value": {
+        "value": "linear-gradient(0deg, {colors.depthSecondaryDark1}, {colors.depthSecondary})"
+      },
+      "type": "derived-string",
+      "comments": []
+    },
+    "highlightLight4ToDepthSecondary": {
+      "category": "gradients",
+      "version": "1.0",
+      "value": {
+        "value": "linear-gradient(0deg, {colors.depthSecondary}, {colors.highlightLight4})"
+      },
+      "type": "derived-string",
+      "comments": []
+    },
+    "invertTextShadow": {
+      "category": "shadows",
+      "version": "1.0",
+      "value": {
+        "value": "0 1px 1px {colors.brandBase, alpha-0.5}"
+      },
+      "type": "derived-string",
+      "comments": []
+    },
+    "menuShadow": {
+      "category": "shadows",
+      "version": "1.0",
+      "value": {
+        "value": "0 2px 3px 0 {colors.blackBase, alpha-0.2}"
+      },
+      "type": "derived-string",
+      "comments": []
+    },
+    "panelShadow": {
+      "category": "shadows",
+      "version": "1.0",
+      "value": {
+        "value": "0 1px 2px 0 {colors.blackBase, alpha-0.14}, 0 1px 5px 0 {colors.blackBase, alpha-0.12}"
+      },
+      "type": "derived-string",
+      "comments": []
+    },
+    "actionElementBoxShadow": {
+      "category": "shadows",
+      "version": "1.0",
+      "value": {
+        "value": "0 1px 2px 0 {colors.brandBase, alpha-0.1} inset"
+      },
+      "type": "derived-string",
+      "comments": []
+    },
+    "wideBoxShadow": {
+      "category": "shadows",
+      "version": "1.0",
+      "value": {
+        "value": "0px 4px 8px 0px {colors.blackBase, alpha-0.14}"
+      },
+      "type": "derived-string",
+      "comments": []
+    },
+    "absoluteFocus": {
+      "category": "focuses",
+      "version": "1.0",
+      "value": {
+        "content": "''",
+        "position": "absolute",
+        "pointerEvents": "none",
+        "top": {
+          "value": -2,
+          "unit": "px"
+        },
+        "right": {
+          "value": -2,
+          "unit": "px"
+        },
+        "bottom": {
+          "value": -2,
+          "unit": "px"
+        },
+        "left": {
+          "value": -2,
+          "unit": "px"
+        },
+        "borderRadius": "{radiuses.focus}",
+        "backgroundColor": "transparent",
+        "border": "0px solid {colors.whiteBase}",
+        "boxSizing": "border-box",
+        "boxShadow": "0 0 0 2px {colors.accentSecondary}",
+        "zIndex": "888"
+      },
+      "type": "derived-object",
+      "comments": []
+    },
+    "boxShadowFocus": {
+      "category": "focuses",
+      "version": "1.0",
+      "value": {
+        "outline": "0",
+        "borderRadius": "{radiuses.focus}",
+        "boxShadow": "0 0 0 2px {colors.accentSecondary}"
+      },
+      "type": "derived-object",
+      "comments": []
+    },
+    "noMouseFocus": {
+      "category": "focuses",
+      "version": "1.0",
+      "wrapper": ":not(:focus-visible)",
+      "value": {
+        "outline": "0",
+        "after": "content: none;"
+      },
+      "type": "derived-object",
+      "comments": []
+    }
+  },
+  "categories": {
+    "gradients": {
+      "tokenPrefix": "gradient",
+      "desc": ""
+    },
+    "shadows": {
+      "tokenPrefix": "shadow",
+      "desc": ""
+    },
+    "focuses": {
+      "tokenPrefix": "focus",
+      "desc": ""
+    }
+  }
+}
