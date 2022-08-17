@@ -18,25 +18,59 @@ function main() {
       .parse(process.argv);
     const opts = program.opts();
 
-    const tokensByCategory = tokensParser(tokensData, tokensData.tokens);
+    // Get basic tokens grouped by category
+    const basicTokensByCategory = tokensParser(tokensData, tokensData.tokens);
+    // Get derived tokens grouped by category
     const derviedTokensByCategory = tokensParser(
       derivedTokensData,
       derivedTokensData.tokens,
     );
 
+    /**
+     * Derived tokens contain variables which correspond to a value in the
+     * basicTokens. For example, gradient "highlightBaseToHighlightDark1" is defined as
+     * linear-gradient(0deg, {colors.highlightBase} 0%, {colors.highlightDark1} 100%)
+     *
+     * We have to find these variables inside curly brackets {} and replace them with the correct token value.
+     * For example, "highlightBaseToHighlightDark1" would then become
+     * linear-gradient(0deg, hsl(212, 63%, 45%) 0%, hsl(212, 63%, 37%) 100%)
+     */
     derviedTokensByCategory.forEach((category) => {
       category.tokens.forEach((derivedToken) => {
+        // Derived token type 'derived-string' only contains one (string) value, let's handle it in this if-block
         if (derivedToken.type === 'derived-string') {
+          // Find the variables in the value string. They are inside curly brackets {}
           const variables = derivedToken.value.value.match(/\{.+?\}/g);
+          // A single string might contain multiple variables. Let's handle them all
           variables.forEach((variable) => {
+            // Strip away the curly brackets {}
             let strippedVar = variable.replace(/[{} ]/g, '');
 
+            /**
+             * A derived token variable consist of 2 parts: mainPart and modifierPart
+             * mainPart contains the actual basicToken mapping (e.g. colors.highlightBase)
+             * modifierPart is optional and contains a value which manipulates the mainPart in some way
+             * For now, the modifierPart is used only for colors, containing the alpha channel which is
+             * missing from the basic colors
+             *
+             * Example of a variable with both the variabelPart and the modifierPart:
+             * {colors.whiteBase, alpha-0.1}
+             * */
             const mainParts = strippedVar.split(',');
             let variablePart = mainParts[0];
             const modifierPart = mainParts.length === 2 ? mainParts[1] : null;
 
+            /**
+             * The variablePart consists of 2 parts as well: category and name
+             * They are separated by a period.
+             * Example: colors.highlightBase
+             */
             variablePart = variablePart.split('.');
-            const matchingToken = tokensByCategory
+            /**
+             * Now let's find a match from the basicTokens
+             * First through the category and then the actual name
+             */
+            const matchingToken = basicTokensByCategory
               .find((cat) => cat.category === variablePart[0])
               .tokens.find((t) => t.name === variablePart[1]);
             if (!matchingToken) {
@@ -45,6 +79,12 @@ function main() {
               );
             }
 
+            /**
+             * Then parse together the string we want to insert into the derived token
+             * in place of the variable.
+             * Different categories must be handled in a slightly different way
+             * For now, only colors and radiuses are used in variables so we have handlers for them
+             */
             let derivedValueString = '';
             if (matchingToken.category === 'colors') {
               derivedValueString = convertHslMapToString(
@@ -56,20 +96,39 @@ function main() {
                 matchingToken.value.value + matchingToken.value.unit;
             }
 
+            // And finally, insert the parsed-together token in place of the original variable string
             derivedToken.value.value = derivedToken.value.value.replace(
               variable,
               derivedValueString,
             );
           });
+
+          /**
+           * A derived token can also be of type 'derived-object'
+           * This follows the same idea as 'derived-string', but it consists of more than one CSS property
+           * which might all have variables inside them
+           * 
+           * For example "boxShadowFocus" is defined as
+           * "value": {
+                "outline": "0",
+                "borderRadius": "{radiuses.focus}",
+                "boxShadow": "0 0 0 2px {colors.accentSecondary}"
+              }
+           */
         } else if (derivedToken.type === 'derived-object') {
           const valuesWithVariables = [];
-          // See which values have variables
+          // Loop trough all keys in the value-object to see which of them contain variables
           Object.entries(derivedToken.value).forEach((entry) => {
             const [key, value] = entry;
             if (String(value).includes('{')) {
               valuesWithVariables.push({ key: key, value: value });
             }
           });
+          /**
+           * The rest is pretty much the same as for the derived-string type:
+           * We find the corresponding basicToken for each variable and
+           * replace it inside the original derived token JSON object
+           */
           valuesWithVariables.forEach((valWithVar) => {
             const variables = valWithVar.value.match(/\{.+?\}/g);
             variables.forEach((variable) => {
@@ -80,7 +139,7 @@ function main() {
               const modifierPart = mainParts.length === 2 ? mainParts[1] : null;
 
               variablePart = variablePart.split('.');
-              const matchingToken = tokensByCategory
+              const matchingToken = basicTokensByCategory
                 .find((cat) => cat.category === variablePart[0])
                 .tokens.find((t) => t.name === variablePart[1]);
               if (!matchingToken) {
@@ -100,6 +159,10 @@ function main() {
                   matchingToken.value.value + matchingToken.value.unit;
               }
 
+              /**
+               * This part is slightly different compared to 'derived-string', since the
+               * 'derived-object' contains multiple keys instead of just one
+               */
               derivedToken.value[valWithVar.key] = derivedToken.value[
                 valWithVar.key
               ].replace(variable, derivedValueString);
@@ -109,7 +172,8 @@ function main() {
       });
     });
 
-    const allTokens = tokensByCategory.concat(derviedTokensByCategory);
+    // At the end, we put basicTokens and derivedTokens into a single array and run them through the converters
+    const allTokens = basicTokensByCategory.concat(derviedTokensByCategory);
 
     opts.format.split(' ').forEach((format) => {
       if (converters[format] == undefined) {
@@ -131,10 +195,10 @@ function main() {
   }
 }
 
-function getFormattedTokens(formatters, tokensByCategory) {
+function getFormattedTokens(formatters, basicTokensByCategory) {
   let formattedTokens = '';
   formatters.forEach((formatter) => {
-    formattedTokens += formatter.convert(tokensByCategory);
+    formattedTokens += formatter.convert(basicTokensByCategory);
   });
   return formattedTokens;
 }
