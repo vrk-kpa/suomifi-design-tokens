@@ -21,7 +21,7 @@ function main() {
     // Get basic tokens grouped by category
     const basicTokensByCategory = tokensParser(tokensData, tokensData.tokens);
     // Get derived tokens grouped by category
-    const derviedTokensByCategory = tokensParser(
+    const derivedTokensByCategory = tokensParser(
       derivedTokensData,
       derivedTokensData.tokens,
     );
@@ -35,7 +35,7 @@ function main() {
      * For example, "highlightBaseToHighlightDark1" would then become
      * linear-gradient(0deg, hsl(212, 63%, 45%) 0%, hsl(212, 63%, 37%) 100%)
      */
-    derviedTokensByCategory.forEach((category) => {
+    derivedTokensByCategory.forEach((category) => {
       category.tokens.forEach((derivedToken) => {
         // Derived token type 'derived-string' only contains one (string) value, let's handle it in this if-block
         if (derivedToken.type === 'derived-string') {
@@ -173,7 +173,7 @@ function main() {
     });
 
     // At the end, we put basicTokens and derivedTokens into a single array and run them through the converters
-    const allTokens = basicTokensByCategory.concat(derviedTokensByCategory);
+    const allTokens = basicTokensByCategory.concat(derivedTokensByCategory);
 
     opts.format.split(' ').forEach((format) => {
       if (converters[format] == undefined) {
