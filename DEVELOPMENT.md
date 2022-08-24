@@ -2,17 +2,25 @@
 
 ## ℹ Token Data
 
-The design system tokens are stored in the tokens.json file. The file consists of token categories and tokens.
+The design system tokens are divided into two types: basic tokens and derived tokens. Basic tokens are stored in the `tokens.json` file. The file consists of token categories and tokens. Derived tokens use the basic tokens to form more complex CSS styles. They are stored in the `derived-tokens.json` file.
 
 ### 📖 Categories
 
 Design tokens are divided into categories based on token type. Categories include a token prefix for the tokens in the category and description information. All tokens belong to exactly one category.
 
-Current categories are:
+Current basic token categories are:
 
 - Colors
 - Typography
 - Spacing
+- Radiuses
+- Transitions
+
+Current derived tokens categories are:
+
+- Gradients
+- Shadows
+- Focuses
 
 ### 📃 Tokens
 
@@ -27,6 +35,8 @@ Currently token values are defined by type in the following way:
   - **fontSize** and **lineHeight**: _object_ with keys for value and unit where **value** is an _integer_ or _string_ and **unit** either a _string_ or _null_
   - **fontWeight**: _integer_
 - **size**: _object_ with keys for value and unit where **value** is an _integer_ and **unit** is either a _string_ or _null_.
+- **derived-string**: _string_ which might contain variables (which map to a basic token value)
+- **derived-object**: _object_ which contains multiple string values, which all might contain variables (which map to a basic token value)
 
 ## ⌨️ Development
 
@@ -43,7 +53,7 @@ yarn
 ### 🛠Adding and modifying tokens and categories
 
 1. Create a new branch for your changes, nothing will be merged directly to master.
-2. Modify the **tokens.json** file following the format described above
+2. Modify the **tokens.json** or **derived-tokens.json** file following the format described above. When modifying derived tokens, familiarize yourself with the mapping logic described in detail in the `convert.js` file. When adding new types of tokens, also make sure they are handled appropriately in the converter functions (converters/scss & converters/typescript)
 3. Run
 
 ```bash
@@ -56,7 +66,7 @@ and see that the build passes without failures
    - index.d.ts
    - index.js
    - tokens.scss
-5. Verify that the contents of the files is as expected (valid scss, js and ts)
+5. Verify that the contents of the files is as expected (valid scss, js and ts).
 6. Create a pull request for your branch and get the needed reviews.
 7. Merge the pull request to master.
 

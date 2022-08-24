@@ -8,9 +8,14 @@ The design system tokens are available in SCSS and JavaScript formats. Typings f
 
 The following token types are currently available:
 
-- colors
-- typography
-- spacing
+- Colors
+- Typography
+- Spacing
+- Gradients
+- Shadows
+- Focus
+- Radius
+- Transitions
 
 # 📦 Install
 
@@ -85,6 +90,109 @@ Example use case:
 ```scss
 .custom-class {
   margin: $fi-spacing-l;
+}
+```
+
+### 🎨 Gradients
+
+Gradient tokens are available as variables with additional **gradient-** prefix.
+
+Excerpt from **tokens.scss**:
+
+```scss
+$fi-gradient-highlight-base-to-highlight-dark1: linear-gradient(
+  0deg,
+  hsl(212, 63%, 45%) 0%,
+  hsl(212, 63%, 37%) 100%
+);
+```
+
+Example use case:
+
+```scss
+.custom-class {
+  background-color: $fi-gradient-highlight-base-to-highlight-dark1;
+}
+```
+
+### ❏ Shadows
+
+Shadow tokens are available as variables with additional **shadow-** prefix.
+
+Excerpt from **tokens.scss**:
+
+```scss
+$fi-shadow-menu-shadow: 0 2px 3px 0 hsla(0, 0%, 16%, 0.2);
+```
+
+Example use case:
+
+```scss
+.custom-class {
+  box-shadow: $fi-shadow-menu-shadow;
+}
+```
+
+### 𑗏 Focus
+
+Focus tokens are available as mixins with additional **focus-** prefix.
+
+Excerpt from **tokens.scss**:
+
+```scss
+@mixin fi-focus-box-shadow-focus {
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px hsl(196, 77%, 44%);
+  outline: 0;
+}
+```
+
+Example use case:
+
+```scss
+.custom-class {
+  @include fi-focus-box-shadow-focus;
+}
+```
+
+### ⌝ Radius
+
+Radius tokens are available as variables with additional **radius-** prefix.
+
+Excerpt from **tokens.scss**:
+
+```scss
+$fi-radius-basic: 2px;
+```
+
+Example use case:
+
+```scss
+.custom-class {
+  border-radius: $fi-radius-basic;
+}
+```
+
+### 💨 Transitions
+
+Transition tokens are available as variables with additional **transition-** prefix.
+
+Excerpt from **tokens.scss**:
+
+```scss
+$fi-transition-basic-timing-function: cubic-bezier(
+  0.28,
+  0.84,
+  0.42,
+  1
+);
+```
+
+Example use case:
+
+```scss
+.custom-class {
+  transition: all 50ms $fi-transition-basic-timing-function;
 }
 ```
 
@@ -239,6 +347,77 @@ const spacingL: ValueUnit = suomifiDesignTokens.values.spacing.l;
 const spacingLWithUnit: string = spacingL.value + spacingL.unit;
 
 const spacingLCss: string = suomifiDesignTokens.spacing.l;
+```
+
+### 🎨 Gradients
+
+Gradient tokens are available with **gradients** property as css strings.
+
+Excerpt from **suomifiDesignTokens** object:
+
+```js
+exports.suomifiDesignTokens = {
+  colors: {
+    highlightBaseToHighlightDark1: 'linear-gradient(0deg, hsl(212, 63%, 45%) 0%, hsl(212, 63%, 37%) 100%)';
+  },
+};
+```
+
+### ❏ Shadows
+
+Shadow tokens are available with **shadows** property as css strings.
+
+Excerpt from **suomifiDesignTokens** object:
+
+```js
+exports.suomifiDesignTokens = {
+  shadows: {
+    menuShadow: "0 2px 3px 0 hsla(0, 0%, 16%, 0.2)";
+  },
+};
+```
+
+### 𑗏 Focus
+
+Focus tokens are available with **focuses** property as css strings.
+
+Excerpt from **suomifiDesignTokens** object:
+
+```js
+exports.suomifiDesignTokens = {
+  focuses: {
+    boxShadowFocus:
+      'border-radius: 2px;box-shadow: 0 0 0 2px hsl(196, 77%, 44%);outline: 0;'
+  }
+};
+```
+
+### ⌝ Radius
+
+Radius tokens are available with **radiuses** property as css strings.
+
+Excerpt from **suomifiDesignTokens** object:
+
+```js
+exports.suomifiDesignTokens = {
+  radiuses: {
+    basic: '2px'
+  }
+};
+```
+
+### 💨 Transitions
+
+Radius tokens are available with **radiuses** property as css strings.
+
+Excerpt from **suomifiDesignTokens** object:
+
+```js
+exports.suomifiDesignTokens = {
+  transitions: {
+    basicTimingFunction: 'cubic-bezier(0.28, 0.84, 0.42, 1)'
+  }
+};
 ```
 
 ## ⌨️ Development
