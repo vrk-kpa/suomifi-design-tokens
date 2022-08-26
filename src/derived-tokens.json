@@ -4,7 +4,7 @@
       "category": "gradients",
       "version": "1.0",
       "value": {
-        "value": "linear-gradient(0deg, {colors.highlightDark1} 0%, {colors.highlightBase} 100%)"
+        "value": "linear-gradient(0deg, {colors.highlightBase} 0%, {colors.highlightDark1} 100%)"
       },
       "type": "derived-string",
       "comments": []
