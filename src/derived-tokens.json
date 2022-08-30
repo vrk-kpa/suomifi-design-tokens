@@ -163,7 +163,7 @@
         "border": "0px solid {colors.whiteBase}",
         "boxSizing": "border-box",
         "boxShadow": "0 0 0 2px {colors.accentSecondary}",
-        "zIndex": "888"
+        "zIndex": "9999"
       },
       "type": "derived-object",
       "comments": []
