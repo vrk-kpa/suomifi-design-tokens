@@ -179,6 +179,15 @@
       "type": "derived-object",
       "comments": []
     },
+    "highContrastFocus": {
+      "category": "focuses",
+      "version": "1.0",
+      "value": {
+        "outline": "3px solid transparent"
+      },
+      "type": "derived-object",
+      "comments": []
+    },
     "noMouseFocus": {
       "category": "focuses",
       "version": "1.0",
