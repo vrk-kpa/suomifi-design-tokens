@@ -13,13 +13,13 @@ commands:
           # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
           name: Restore NPM Package Cache
           keys:
-            - npm-packages-{{ checksum "package.lock" }}
+            - npm-packages-{{ checksum "package-lock.json" }}
       - run:
           name: Install Dependencies
           command: npm ci
       - save_cache: # special step to save the dependency cache
           name: Save npm Package Cache
-          key: npm-packages-{{ checksum "package.lock" }}
+          key: npm-packages-{{ checksum "package-lock.json" }}
           paths:
             - ~/.cache/npm
 
@@ -28,7 +28,7 @@ jobs:
     executor: build-executor
     steps:
       - checkout_and_cache
-      - run: npm validate
+      - run: npm run validate
 
 workflows:
   version: 2
