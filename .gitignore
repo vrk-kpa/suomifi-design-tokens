@@ -1,6 +1,5 @@
 .DS_STORE
 *.log
-package-lock.json
 
 # build output
 tmp

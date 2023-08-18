@@ -3,7 +3,7 @@ version: 2.1
 executors:
   build-executor:
     docker:
-      - image: circleci/node:lts
+      - image: cimg/node:lts
 
 commands:
   checkout_and_cache:
@@ -11,24 +11,24 @@ commands:
       - checkout
       - restore_cache: # special step to restore the dependency cache
           # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          name: Restore Yarn Package Cache
+          name: Restore NPM Package Cache
           keys:
-            - yarn-packages-{{ checksum "yarn.lock" }}
+            - npm-packages-{{ checksum "package.lock" }}
       - run:
           name: Install Dependencies
-          command: yarn install --frozen-lockfile
+          command: npm ci
       - save_cache: # special step to save the dependency cache
-          name: Save Yarn Package Cache
-          key: yarn-packages-{{ checksum "yarn.lock" }}
+          name: Save npm Package Cache
+          key: npm-packages-{{ checksum "package.lock" }}
           paths:
-            - ~/.cache/yarn
+            - ~/.cache/npm
 
 jobs:
   test_and_build:
     executor: build-executor
     steps:
       - checkout_and_cache
-      - run: yarn validate
+      - run: npm validate
 
 workflows:
   version: 2
