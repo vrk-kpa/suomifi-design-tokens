@@ -1,6 +1,6 @@
 .DS_STORE
 *.log
-package-lock.json
+yarn.lock
 
 # build output
 tmp

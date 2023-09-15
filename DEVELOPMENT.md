@@ -42,12 +42,12 @@ Currently token values are defined by type in the following way:
 
 ### 🏗 Setting up local development environment
 
-You'll need [Node.js](https://nodejs.org), [NPM](https://www.npmjs.com/get-npm) and [YARN](https://yarnpkg.com/) installed and configured on your machine. Setting these up is beoynd the scope of these instructions.
+You'll need [Node.js](https://nodejs.org), [NPM](https://www.npmjs.com/get-npm) installed and configured on your machine. Setting these up is beoynd the scope of these instructions.
 
 Clone the repository [suomifi-design-tokens](https://github.com/vrk-kpa/suomifi-design-tokens) to your local machine and run
 
 ```bash
-yarn
+npm install
 ```
 
 ### 🛠Adding and modifying tokens and categories
@@ -57,7 +57,7 @@ yarn
 3. Run
 
 ```bash
-yarn build
+npm run build
 ```
 
 and see that the build passes without failures
@@ -77,7 +77,7 @@ and see that the build passes without failures
 3. Run
 
 ```bash
-yarn build
+npm run build
 ```
 
 and verify that everything still works as expected

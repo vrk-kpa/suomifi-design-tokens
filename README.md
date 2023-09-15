@@ -20,7 +20,7 @@ The following token types are currently available:
 # 📦 Install
 
 ```bash
-yarn add suomifi-design-tokens
+npm install suomifi-design-tokens
 ```
 
 # 🔨 Usage

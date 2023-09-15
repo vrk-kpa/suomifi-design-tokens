@@ -58,14 +58,16 @@ function formatTypographyToScss(tokens, scssPrefix) {
       token.name,
     )} {
         font-family: '${token.value.fontFamily.join("', '")}', ${
-      token.value.genericFontFamily
-    };
+          token.value.genericFontFamily
+        };
         font-size: ${token.value.fontSize.value}${
-      token.value.fontSize.unit !== null ? token.value.fontSize.unit : ''
-    };
+          token.value.fontSize.unit !== null ? token.value.fontSize.unit : ''
+        };
         line-height: ${token.value.lineHeight.value}${
-      token.value.lineHeight.unit !== null ? token.value.lineHeight.unit : ''
-    };
+          token.value.lineHeight.unit !== null
+            ? token.value.lineHeight.unit
+            : ''
+        };
         font-weight: ${token.value.fontWeight};
       }`;
   });
