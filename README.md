@@ -16,6 +16,7 @@ The following token types are currently available:
 - Focus
 - Radius
 - Transitions
+- Breakpoints
 
 # 📦 Install
 
@@ -408,7 +409,7 @@ exports.suomifiDesignTokens = {
 
 ### 💨 Transitions
 
-Radius tokens are available with **radiuses** property as css strings.
+Radius tokens are available with **transitions** property as css strings.
 
 Excerpt from **suomifiDesignTokens** object:
 
@@ -420,6 +421,25 @@ exports.suomifiDesignTokens = {
 };
 ```
 
+### Breakpoints
+
+Breakpoint tokens are available with **breakpoints** property as css strings. The values are static pixel values, and the usage logic is meant to be as follows:
+
+- xxl: >=1400
+- xl: >=1200
+- l: >=900
+- m: >=768
+- s: >=576
+
+Excerpt from **suomifiDesignTokens** object:
+
+```js
+exports.suomifiDesignTokens = {
+  breakpoints: {
+    xxl: '1400px'
+  }
+};
+
 ## ⌨️ Development
 
 See [DEVELOPMENT.md](/DEVELOPMENT.md).
@@ -427,3 +447,4 @@ See [DEVELOPMENT.md](/DEVELOPMENT.md).
 ## Licensing
 
 MIT [LICENSE](/LICENSE)
+```
