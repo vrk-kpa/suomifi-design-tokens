@@ -56,6 +56,11 @@ function formatToTS(tokensByCategory, tokensInterfaceName, exportObjectName) {
             focuses: formatFocusTokensToString(category.tokens),
           });
           break;
+        case 'breakpoints':
+          resultArray.push({
+            breakpoints: formatValueUnitTokensToString(category.tokens),
+          });
+          break;
         default:
           console.warn(
             `String formatting: Unrecognized category type ${category.category}`,
@@ -252,6 +257,15 @@ function generateTSInterfaces(tokensByCategory) {
             ...generateTSStringInterfaceCatergory(
               value.tokens,
               'FocusDesignTokens',
+            ),
+          );
+          return resultArray;
+        }
+        case 'breakpoints': {
+          resultArray.push(
+            ...generateTSStringInterfaceCatergory(
+              value.tokens,
+              'BreakpointDesignTokens',
             ),
           );
           return resultArray;

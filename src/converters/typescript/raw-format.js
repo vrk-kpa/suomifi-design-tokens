@@ -47,6 +47,9 @@ function formatToRawTS(
         case 'focuses':
           resultArray.push({ focuses: formatFocusToTS(category.tokens) });
           break;
+        case 'breakpoints':
+          resultArray.push({ breakpoints: formatSpacingToTS(category.tokens) });
+          break;
         default:
           console.warn(
             `Raw formatting: Unrecognized category type ${category.category}`,
@@ -244,6 +247,16 @@ function generateTSInterfaces(tokensByCategory) {
             ...generateTSInterfaceCategory(
               value.tokens,
               'RawSpacingDesignTokens',
+              'ValueUnit',
+            ),
+          );
+          return resultArray;
+        }
+        case 'breakpoints': {
+          resultArray.push(
+            ...generateTSInterfaceCategory(
+              value.tokens,
+              'RawBreakpointDesignTokens',
               'ValueUnit',
             ),
           );
