@@ -35,6 +35,9 @@ function formatToScss(tokensByCategory, scssPrefix) {
       case 'focuses':
         resultArray.push(...formatFocusToScss(category.tokens, scssPrefix));
         break;
+      case 'breakpoints':
+        resultArray.push(...formatSpacingToScss(category.tokens, scssPrefix));
+        break;
       default:
         console.warn(
           `SCSS formatting: Unrecognized category type ${category.category}`,

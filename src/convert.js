@@ -9,6 +9,26 @@ const derivedTokensData = require('./derived-tokens.json');
 const tokensParser = require('./tokens-parser');
 const converters = require('./converters');
 
+function convertTokenNames(tokensByCategory) {
+  return tokensByCategory.map((category) => {
+    if (category.category === 'breakpoints') {
+      // Convert breakpoint token names from "sBreakpoint" -> "s", "mBreakpoint" -> "m", etc.
+      const convertedTokens = category.tokens.map((token) => {
+        const newName = token.name.replace(/Breakpoint$/, ''); // Remove "Breakpoint" suffix
+        return {
+          ...token,
+          name: newName,
+        };
+      });
+      return {
+        ...category,
+        tokens: convertedTokens,
+      };
+    }
+    return category; // Return other categories unchanged
+  });
+}
+
 function main() {
   try {
     const program = new Command();
@@ -173,7 +193,9 @@ function main() {
     });
 
     // At the end, we put basicTokens and derivedTokens into a single array and run them through the converters
-    const allTokens = basicTokensByCategory.concat(derivedTokensByCategory);
+    const allTokens = convertTokenNames(
+      basicTokensByCategory.concat(derivedTokensByCategory),
+    );
 
     opts.format.split(' ').forEach((format) => {
       if (converters[format] == undefined) {
