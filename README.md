@@ -60,8 +60,7 @@ Excerpt from **tokens.scss**:
 
 ```scss
 @mixin fi-text-heading1 {
-  font-family: 'Source Sans Pro', 'Helvetica Neue', 'Arial',
-    sans-serif;
+  font-family: 'Source Sans 3', 'Helvetica Neue', 'Arial', sans-serif;
   font-size: 40px;
   line-height: 48px;
   font-weight: 300;
@@ -270,13 +269,13 @@ Excerpt from **suomifiDesignTokens** object:
 exports.suomifiDesignTokens = {
   typography: {
     heading1:
-      "font-family: 'Source Sans Pro', 'Helvetica Neue', 'Arial', sans-serif; font-size: 40px; line-height: 48px; font-weight: 300;"
+      "font-family: 'Source Sans 3', 'Helvetica Neue', 'Arial', sans-serif; font-size: 40px; line-height: 48px; font-weight: 300;"
   },
   values: {
     typography: {
       heading1: {
         fontFamily:
-          "'Source Sans Pro', 'Helvetica Neue', 'Arial', sans-serif",
+          "'Source Sans 3', 'Helvetica Neue', 'Arial', sans-serif",
         fontSize: { value: 40, unit: 'px' },
         lineHeight: { value: 48, unit: 'px' },
         fontWeight: 300
