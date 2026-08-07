@@ -44,6 +44,8 @@ Currently token values are defined by type in the following way:
 
 You'll need [Node.js](https://nodejs.org), [NPM](https://www.npmjs.com/get-npm) installed and configured on your machine. Setting these up is beoynd the scope of these instructions.
 
+**Note!** Before installing dependencies, make sure you are using npm v11.10.0 or newer in order to utilize `min-release-age` as a safety measure.
+
 Clone the repository [suomifi-design-tokens](https://github.com/vrk-kpa/suomifi-design-tokens) to your local machine and run
 
 ```bash
