@@ -12,6 +12,8 @@
   "author": "Joonas Kallunki & Aappo Ålander",
   "license": "MIT",
   "scripts": {
+    "prepare": "npm run check:npm-version",
+    "check:npm-version": "node scripts/check-npm-version.js",
     "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "clean:tmp": "rimraf tmp",
     "clean:dist": "rimraf dist",
