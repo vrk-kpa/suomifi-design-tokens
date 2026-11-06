@@ -408,7 +408,7 @@ exports.suomifiDesignTokens = {
 
 ### 💨 Transitions
 
-Radius tokens are available with **transitions** property as css strings.
+Transition tokens are available with **transitions** property as css strings.
 
 Excerpt from **suomifiDesignTokens** object:
 
