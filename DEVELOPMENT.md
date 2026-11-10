@@ -84,7 +84,8 @@ npm run build
 
 and verify that everything still works as expected
 
-4. Publish the packge to npm
+4. Publish the packge to a local registry or use `npm pack` to make a tarball
 5. Test the package by installing it to a project and using it
 6. Create a pull request for your branch and get the needed reviews.
 7. Merge the pull request to master.
+8. Pull the updated master branch and publish the package to npm
